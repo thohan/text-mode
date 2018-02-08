@@ -6,11 +6,12 @@
 		"ng": "ng",
 		"start": "ng serve",
 		"build": "ng build --prod",
+		"build-debug": "ng build --debug",
 		"test": "ng test",
 		"lint": "ng lint",
 		"e2e": "ng e2e",
 		"copy": "xcopy \"dist\" \"..\\text-mode.web\\Scripts\\app\" /i /s /r /y /c",
-		"tmc": "npm run build && npm run copy"
+		"tmc": "npm run build-debug && npm run copy"
 	},
 	"private": true,
 	"dependencies": {

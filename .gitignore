@@ -12,3 +12,5 @@ text-mode.web/bin/*
 text-mode.web/obj/*
 text-mode.web/Scripts/app/*
 text-mode.web/text-mode.web.csproj.user
+text-mode.web/text-mode.web.csproj.user
+*.user
