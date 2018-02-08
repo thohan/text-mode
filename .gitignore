@@ -1,7 +1,4 @@
-
-.vs/text-mode.lib/v15/.suo
+.vs/*
 .gitattributes
-.vs/text-mode.lib/v15/Server/sqlite3/storage.ide
-.vs/text-mode.lib/v15/Server/sqlite3/db.lock
 text-mode.lib/obj/*
 
