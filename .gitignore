@@ -1,6 +1,7 @@
 .vs/*
 .gitattributes
 text-mode.lib/obj/*
+text-mode.lib/text-mode.lib.csproj.user
 packages/*
 text-mode-cli/bin/*
 text-mode-cli/obj/*
