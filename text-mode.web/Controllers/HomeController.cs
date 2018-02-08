@@ -10,8 +10,6 @@ namespace text_mode.web.Controllers
 	{
 		public ActionResult Index()
 		{
-			ViewBag.Title = "Home Page";
-
 			return View();
 		}
 	}

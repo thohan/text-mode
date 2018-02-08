@@ -1,11 +1,14 @@
 .vs/*
 .gitattributes
+packages/*
 text-mode.lib/obj/*
 text-mode.lib/text-mode.lib.csproj.user
-packages/*
 text-mode-cli/bin/*
+text-mode-cli/dist/*
 text-mode-cli/obj/*
 text-mode-cli/node_modules/*
 text-mode-cli/text-mode-cli.csproj.user
 text-mode.web/bin/*
 text-mode.web/obj/*
+text-mode.web/Scripts/app/*
+text-mode.web/text-mode.web.csproj.user
