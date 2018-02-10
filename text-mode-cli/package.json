@@ -12,10 +12,10 @@
 		"tsc": "tsc",
 		"typings": "typings",
 		"build": "ng build --prod",
-		"build-debug": "ng build --debug",
+		"build-debug": "ng build --debug --watch",
 		"lint": "ng lint",
 		"e2e": "ng e2e",
-		"copy": "xcopy \"dist\" \"..\\text-mode.web\\Scripts\\app\" /i /s /r /y /c",
+		"copy": "xcopy \"dist\" \"..\\text-mode.web\\Scripts\\app\" /i /s /r /y /c --watch",
 		"tmc": "npm run build-debug && npm run copy"
 	},
 	"private": true,
