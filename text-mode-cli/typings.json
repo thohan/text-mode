@@ -1,0 +1,13 @@
+﻿{
+	"name": "Modere.Web",
+	"globalDependencies": {
+		"angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+		"angular-mocks": "registry:dt/angular-mocks#1.5.0+20160608104721",
+		"angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160521151413",
+		"jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
+		"jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+		"lodash": "registry:dt/lodash#3.10.0+20160619033623",
+		"require": "github:DefinitelyTyped/DefinitelyTyped/requirejs/require.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+		"reveal": "registry:dt/reveal#1.3.0+20160316155526"
+	}
+}
