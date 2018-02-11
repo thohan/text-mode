@@ -8,7 +8,8 @@ import { DalekComponent } from './daleks/dalek.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DalekComponent
   ],
   imports: [
     BrowserModule,
