@@ -4,11 +4,12 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-
+import { DalekComponent } from './daleks/dalek.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DalekComponent
   ],
   imports: [
     BrowserModule,

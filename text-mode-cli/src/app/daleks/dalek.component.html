@@ -1,0 +1,10 @@
+<div style="width: 800px; margin: 0 auto;">
+    <canvas #canvas 
+        class="clear"
+        style="border:1px solid; margin: 0 auto; width: 800px; height: 500px;"
+        (mousemove)='showMousePosition($event)'></canvas>
+</div> 
+<!-- Testing information -->
+<div style="width: 800px; margin: 0 auto;">
+    <p>Mouse position: {{mousePositionX | number: '3.0-0'}},{{mousePositionY | number: '3.0-0'}}</p>
+</div>
