@@ -15,3 +15,4 @@ text-mode.web/text-mode.web.csproj.user
 text-mode.web/text-mode.web.csproj.user
 *.user
 text-mode-cli/npm-debug.log
+*.user
