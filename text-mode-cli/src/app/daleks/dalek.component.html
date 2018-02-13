@@ -6,5 +6,11 @@
 </div> 
 <!-- Testing information -->
 <div style="width: 800px; margin: 0 auto;">
-    <p>Mouse position: {{mousePositionX | number: '3.0-0'}},{{mousePositionY | number: '3.0-0'}}</p>
+    <p>Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}</p>
+    <p>Doctor position: {{doctor.xpos}},{{doctor.ypos}}</p>
+</div>
+<div style="display: block;">
+    <!-- Image assets loaded on the dom for use by the canvas.
+        See http://www.typescriptgames.com/ImageToCanvas.html for reference.-->
+        <img src="../../assets/doctor.jpg" id="doctor" />
 </div>
