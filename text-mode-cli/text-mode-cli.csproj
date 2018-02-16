@@ -73,7 +73,9 @@
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
     <None Include="packages.config" />
+    <Content Include="src\app\daleks\dalek.component.html" />
     <Content Include="src\assets\.gitkeep" />
+    <Content Include="src\assets\doctor.jpg" />
     <Content Include="src\tsconfig.app.json" />
     <Content Include="src\tsconfig.spec.json" />
     <Content Include="README.md" />
@@ -107,6 +109,9 @@
     <TypeScriptCompile Include="src\app\app.component.spec.ts" />
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.component.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.model.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />

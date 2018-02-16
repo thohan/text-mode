@@ -15,7 +15,7 @@
 		"build-debug": "ng build --debug --watch",
 		"lint": "ng lint",
 		"e2e": "ng e2e",
-		"copy": "xcopy \"dist\" \"..\\text-mode.web\\Scripts\\app\" /i /s /r /y /c --watch",
+		"copy": "xcopy \"dist\" \"..\\text-mode.web\\src\\app\" /i /s /r /y /c --watch",
 		"tmc": "npm run build-debug && npm run copy"
 	},
 	"private": true,
