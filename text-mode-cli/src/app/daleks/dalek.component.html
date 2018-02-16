@@ -4,12 +4,15 @@
 			style="border:1px solid;"
 			width="800"
 			height="500"
-			(mousemove)='showMousePosition($event)'></canvas>
+			(mousemove)='onMouseMove($event)'
+			(click)='onClick($event)'></canvas><!--change back to mousemove after testing -->
 </div>
 <!-- Testing information -->
 <div style="width: 800px; margin: 0 auto;">
 	<p>Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}</p>
 	<p>Dr. position: {{doctor.xpos}},{{doctor.ypos}}</p>
+	<p>Arrow direction: {{doctor.arrowDirection}}</p>
+	<p>Arrow direction in degrees: {{doctor.arrowDirectionInDegrees}}</p>
 </div>
 <div style="display: block;">
 	<!-- This path works for ng serve -->

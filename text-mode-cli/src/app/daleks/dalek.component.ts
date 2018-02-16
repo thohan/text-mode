@@ -12,12 +12,22 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	ctx: CanvasRenderingContext2D; 
 	doctor: DalekModel.Doctor;
 
+
 	@ViewChild('canvas') canvas: ElementRef;
 
 	showMousePosition(evt) {
 		var rect = this.canvas.nativeElement.getBoundingClientRect();
 		this.cursor.xpos = evt.clientX - rect.left;
 		this.cursor.ypos = evt.clientY - rect.top;
+	}
+
+	onMouseMove(event) {
+		this.showMousePosition(event);
+		this.doctor.setArrowDirection(this.cursor);
+	}
+
+	onClick(event) {
+		// stuff happens. COol stuff!
 	}
 
 	ngOnInit() {
@@ -36,7 +46,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		// draw the doctor on the canvas - Image assets loaded on the dom for use by the canvas. See http://www.typescriptgames.com/ImageToCanvas.html for reference.
 		this.doctor.image = <HTMLImageElement>document.getElementById('doctor');
 		this.doctor.image.onload = () => {
-			this.ctx.drawImage(this.doctor.image, this.doctor.xpos, this.doctor.ypos);
+			this.ctx.drawImage(this.doctor.image, this.doctor.xpos, this.doctor.ypos, this.doctor.width, this.doctor.height);
 		};
 	};
 
