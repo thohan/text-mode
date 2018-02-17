@@ -73,7 +73,17 @@
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
     <None Include="packages.config" />
+    <Content Include="src\app\daleks\dalek.component.html" />
     <Content Include="src\assets\.gitkeep" />
+    <Content Include="src\assets\arrowe.jpg" />
+    <Content Include="src\assets\arrown.jpg" />
+    <Content Include="src\assets\arrowne.jpg" />
+    <Content Include="src\assets\arrownw.jpg" />
+    <Content Include="src\assets\arrows.jpg" />
+    <Content Include="src\assets\arrowse.jpg" />
+    <Content Include="src\assets\arrowsw.jpg" />
+    <Content Include="src\assets\arroww.jpg" />
+    <Content Include="src\assets\doctor.jpg" />
     <Content Include="src\tsconfig.app.json" />
     <Content Include="src\tsconfig.spec.json" />
     <Content Include="README.md" />
@@ -107,6 +117,11 @@
     <TypeScriptCompile Include="src\app\app.component.spec.ts" />
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.component.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.model.ts" />
+    <TypeScriptCompile Include="src\app\shared\canvas.component.ts" />
+    <TypeScriptCompile Include="src\app\shared\canvas.model.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
@@ -116,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\app\lib\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

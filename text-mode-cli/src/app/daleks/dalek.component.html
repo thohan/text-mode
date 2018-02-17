@@ -1,10 +1,31 @@
 <div style="width: 800px; margin: 0 auto;">
-    <canvas #canvas 
-        class="clear"
-        style="border:1px solid; margin: 0 auto; width: 800px; height: 500px;"
-        (mousemove)='showMousePosition($event)'></canvas>
-</div> 
+	<canvas #canvas
+			class="clear"
+			style="border:1px solid;"
+			width="800"
+			height="500"
+			(mousemove)='onCursorMove($event)'
+			(click)='onClick($event)'></canvas><!--change back to mousemove after testing -->
+</div>
 <!-- Testing information -->
 <div style="width: 800px; margin: 0 auto;">
-    <p>Mouse position: {{mousePositionX | number: '3.0-0'}},{{mousePositionY | number: '3.0-0'}}</p>
+	<p>Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}</p>
+	<p>Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}</p>
+	<p>Arrow direction: {{doctor.arrowDirection}}</p>
+	<p>Arrow direction in degrees: {{doctor.arrowDirectionInDegrees | number: '3.0-0'}}</p>
+</div>
+<div style="display: block;">
+	<!-- This path works for ng serve -->
+	<!--<img src="./assets/doctor.jpg" id="doctor" />-->
+	<!-- this path works for VS debug -->
+	<img src="./src/app/assets/doctor.jpg" id="doctor" />
+	<img src="./src/app/assets/arrowe.jpg" id="arrowe" />
+	<img src="./src/app/assets/arrowne.jpg" id="arrowne" />
+	<img src="./src/app/assets/arrown.jpg" id="arrown" />
+	<img src="./src/app/assets/arrownw.jpg" id="arrownw" />
+	<img src="./src/app/assets/arroww.jpg" id="arroww" />
+	<img src="./src/app/assets/arrowsw.jpg" id="arrowsw" />
+	<img src="./src/app/assets/arrows.jpg" id="arrows" />
+	<img src="./src/app/assets/arrowse.jpg" id="arrowse" />
+	<!-- TODO: Make the paths align! -->
 </div>
