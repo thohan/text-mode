@@ -120,6 +120,8 @@
     <TypeScriptCompile Include="src\app\daleks\dalek.component.spec.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.component.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.model.ts" />
+    <TypeScriptCompile Include="src\app\shared\canvas.component.ts" />
+    <TypeScriptCompile Include="src\app\shared\canvas.model.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
@@ -129,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\app\lib\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

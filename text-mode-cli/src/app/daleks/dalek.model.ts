@@ -1,6 +1,7 @@
-interface ICharacter {
+export interface ICharacter {
 	xpos: number;
 	ypos: number;
+	name: string;
 	image: HTMLImageElement;
 	width: number;
 	height: number;
@@ -80,6 +81,10 @@ export class Arrow {
 				this.xpos = squareSize;
 				this.ypos = 0;
 				break;
+			case Direction.OnSelf:
+				this.name = '';
+				this.xpos = 0;
+				this.ypos = 0;
 			default:
 				break;
 		}
@@ -95,6 +100,7 @@ export class Doctor implements ICharacter {
 	xpos: number;
 	ypos: number;
 	image: HTMLImageElement;
+	name: string = 'doctor';
 	width: number = squareSize;
 	height: number = squareSize;
 	description: Description;
@@ -211,6 +217,7 @@ export class Doctor implements ICharacter {
 export class Dalek implements ICharacter {
 	xpos: number;
 	ypos: number;
+	name: string;
 	image: HTMLImageElement;
 	width: number;
 	height: number;

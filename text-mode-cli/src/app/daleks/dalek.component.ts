@@ -11,6 +11,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	cursor: DalekModel.Cursor;
 	ctx: CanvasRenderingContext2D; 
 	doctor: DalekModel.Doctor;
+	charactersToRedraw: DalekModel.ICharacter[] = [];
 	@ViewChild('canvas') canvas: ElementRef;
 
 	updateCursorPosition(evt) {
@@ -34,10 +35,31 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	redrawCanvas() {
-		// clear canvas, then draw the elements!
+	clearCanvas() {
 		var rect = this.canvas.nativeElement.getBoundingClientRect();
 		this.ctx.clearRect(0, 0, rect.width, rect.height);
+	}
+
+	drawCharacters() {
+		// draw on the canvas - Image assets loaded on the dom for use by the canvas.
+		// See http://www.typescriptgames.com/ImageToCanvas.html for reference.
+		this.charactersToRedraw.forEach((char: DalekModel.ICharacter) => {
+			char.image = <HTMLImageElement>document.getElementById(char.name);
+
+			if (char.image) {
+				this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
+			}
+
+			char.image.onload = () => {
+				this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
+			}
+		});
+	}
+
+	redrawCanvas() {
+		// clear canvas, then draw the elements!
+		this.clearCanvas();
+		this.drawCharacters();
 	}
 
 	onClick(event) {
@@ -55,13 +77,9 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		this.doctor = new DalekModel.Doctor();
 		this.doctor.xpos = 280;
 		this.doctor.ypos = 200;
-
-
-		// draw the doctor on the canvas - Image assets loaded on the dom for use by the canvas. See http://www.typescriptgames.com/ImageToCanvas.html for reference.
-		this.doctor.image = <HTMLImageElement>document.getElementById('doctor');
-		this.doctor.image.onload = () => {
-			this.ctx.drawImage(this.doctor.image, this.doctor.xpos, this.doctor.ypos, this.doctor.width, this.doctor.height);
-		};
+		this.charactersToRedraw.push(this.doctor);
+		// TODO: Load up enemies, other game elements here, add them to the stuff to draw then draw them.
+		this.drawCharacters();
 	};
 
 	ngAfterViewInit() {
