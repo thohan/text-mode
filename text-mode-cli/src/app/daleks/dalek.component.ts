@@ -11,23 +11,37 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	cursor: DalekModel.Cursor;
 	ctx: CanvasRenderingContext2D; 
 	doctor: DalekModel.Doctor;
-
-
 	@ViewChild('canvas') canvas: ElementRef;
 
-	showMousePosition(evt) {
+	updateCursorPosition(evt) {
 		var rect = this.canvas.nativeElement.getBoundingClientRect();
 		this.cursor.xpos = evt.clientX - rect.left;
 		this.cursor.ypos = evt.clientY - rect.top;
 	}
 
-	onMouseMove(event) {
-		this.showMousePosition(event);
-		this.doctor.setArrowDirection(this.cursor);
+	onCursorMove(event) {
+		this.updateCursorPosition(event);
+		let arrow: DalekModel.Arrow = this.doctor.updateArrow(this.cursor);
+
+		if (arrow.hasChanged) {
+			this.redrawCanvas();
+
+			if (arrow.name) {
+				let hoverArrowImage = <HTMLImageElement>document.getElementById(arrow.name);
+				// So, how do I un-draw it? I'm going to have to do the getFrame stuff and essentially redraw every time.
+				this.ctx.drawImage(hoverArrowImage, this.doctor.xpos + arrow.xpos, this.doctor.ypos + arrow.ypos);
+			}
+		}
+	}
+
+	redrawCanvas() {
+		// clear canvas, then draw the elements!
+		var rect = this.canvas.nativeElement.getBoundingClientRect();
+		this.ctx.clearRect(0, 0, rect.width, rect.height);
 	}
 
 	onClick(event) {
-		// stuff happens. COol stuff!
+		// stuff happens. Cool stuff!
 	}
 
 	ngOnInit() {
@@ -51,7 +65,6 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	};
 
 	ngAfterViewInit() {
-
 
 	}
 }
