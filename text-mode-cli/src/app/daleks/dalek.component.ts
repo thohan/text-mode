@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, HostListener } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import * as DalekModel from './dalek.model';
 
@@ -9,10 +9,22 @@ import * as DalekModel from './dalek.model';
 
 export class DalekComponent implements OnInit, AfterViewInit {
 	cursor: DalekModel.Cursor;
-	ctx: CanvasRenderingContext2D; 
+	ctx: CanvasRenderingContext2D;
 	doctor: DalekModel.Doctor;
 	charactersToRedraw: DalekModel.ICharacter[] = [];
 	@ViewChild('canvas') canvas: ElementRef;
+
+	@HostListener('window:keydown') keyStroke() {
+		// console.log('key pressed: ' + (event as KeyboardEvent).keyCode);
+		this.doctor.move(DalekModel.Input.Keyboard);
+		this.drawArrow(true);
+	}
+
+	onClick(event) {
+		this.doctor.move(DalekModel.Input.Mouse);
+		this.drawArrow(true);
+		// The game elements respond:
+	}
 
 	updateCursorPosition(evt) {
 		let rect = this.canvas.nativeElement.getBoundingClientRect();
@@ -75,12 +87,6 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		// draw other game elements
 	}
 
-	onClick(event) {
-		// stuff happens. Cool stuff!
-		this.doctor.move();
-		this.drawArrow(true);
-	}
-
 	ngOnInit() {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 
@@ -90,8 +96,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 		// Now I can draw stuff! (I just need to remember how...)
 		this.doctor = new DalekModel.Doctor();
-		this.doctor.xpos = 280;
-		this.doctor.ypos = 200;
+		this.doctor.teleport();
 		this.charactersToRedraw.push(this.doctor);
 		// TODO: Load up enemies, other game elements here, add them to the stuff to draw then draw them.
 		this.drawCharacters();

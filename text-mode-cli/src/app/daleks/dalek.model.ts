@@ -13,6 +13,11 @@ class Description {
 	// Move image to this class?
 }
 
+export enum Input {
+	Keyboard,
+	Mouse
+}
+
 enum Direction {
 	// I don't know that these numbers are super-useful. I guess I can add behaviors based on them, we'll see...
 	None = 0,
@@ -28,6 +33,8 @@ enum Direction {
 };
 
 const squareSize: number = 20;
+const squareWidth: number = 40;
+const squareHeight: number = 24;
 
 export class Arrow {
 	name: string;
@@ -115,6 +122,12 @@ export class Doctor implements ICharacter {
 
 	centerY(): number {
 		return this.ypos + (this.height / 2);
+	}
+
+	teleport(): void {
+		// Random placement. May not make sense to do this on construction. Probalby not.
+		this.xpos = Math.ceil(Math.random() * squareWidth) * squareSize;
+		this.ypos = Math.ceil(Math.random() * squareHeight) * squareSize;
 	}
 
 	updateArrow(cursor: Cursor): Arrow {
@@ -215,10 +228,47 @@ export class Doctor implements ICharacter {
 		}
 	}
 
-	move(): void {
-		// Should be a simple matter of placing the dr where the arrow is,let's try that:
-		this.xpos += this.arrow.xpos;
-		this.ypos += this.arrow.ypos;
+	move(inputType: Input): void {
+		if (inputType === Input.Mouse) {
+			// Should be a simple matter of placing the dr where the arrow is,let's try that:
+			this.xpos += this.arrow.xpos;
+			this.ypos += this.arrow.ypos;
+		}
+
+		if (inputType === Input.Keyboard) {
+			switch ((event as KeyboardEvent).keyCode) {
+				case 81:	// q - NW
+					this.xpos += -squareSize;
+					this.ypos += -squareSize;
+					break;
+				case 87:	// w - N
+					this.ypos += -squareSize;
+					break;
+				case 69:	// e - NE
+					this.xpos += squareSize;
+					this.ypos += -squareSize;
+					break;
+				case 65:	// a - W
+					this.xpos += -squareSize;
+					break;
+				case 83:	// s - in place
+					break;
+				case 68:	// d - E
+					this.xpos += squareSize;
+					break;
+				case 90:	// z - SW
+					this.xpos += -squareSize;
+					this.ypos += squareSize;
+					break;
+				case 88:	// x - S
+					this.ypos += squareSize;
+					break;
+				case 67:	// c - SE
+					this.xpos += squareSize;
+					this.ypos += squareSize;
+					break;
+			}
+		}
 	}
 }
 
