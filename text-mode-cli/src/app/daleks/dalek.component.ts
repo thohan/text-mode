@@ -15,34 +15,43 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	@ViewChild('canvas') canvas: ElementRef;
 
 	updateCursorPosition(evt) {
-		var rect = this.canvas.nativeElement.getBoundingClientRect();
+		let rect = this.canvas.nativeElement.getBoundingClientRect();
 		this.cursor.xpos = evt.clientX - rect.left;
 		this.cursor.ypos = evt.clientY - rect.top;
 	}
 
 	onCursorMove(event) {
 		this.updateCursorPosition(event);
-		let arrow: DalekModel.Arrow = this.doctor.updateArrow(this.cursor);
+		this.drawArrow();
+	}
 
-		if (arrow.hasChanged) {
+	drawArrow(force: boolean = false) {
+		let arrow = this.doctor.updateArrow(this.cursor);
+
+		if (arrow.hasChanged || force) {
 			this.redrawCanvas();
 
-			if (arrow.name) {
+			if (arrow.name || force) {
 				let hoverArrowImage = <HTMLImageElement>document.getElementById(arrow.name);
-				// So, how do I un-draw it? I'm going to have to do the getFrame stuff and essentially redraw every time.
-				this.ctx.drawImage(hoverArrowImage, this.doctor.xpos + arrow.xpos, this.doctor.ypos + arrow.ypos);
+
+				this.ctx.drawImage(hoverArrowImage,
+					this.doctor.xpos + arrow.xpos,
+					this.doctor.ypos + arrow.ypos,
+					arrow.width,
+					arrow.height);
 			}
 		}
 	}
 
 	clearCanvas() {
-		var rect = this.canvas.nativeElement.getBoundingClientRect();
+		const rect = this.canvas.nativeElement.getBoundingClientRect();
 		this.ctx.clearRect(0, 0, rect.width, rect.height);
 	}
 
 	drawCharacters() {
 		// draw on the canvas - Image assets loaded on the dom for use by the canvas.
 		// See http://www.typescriptgames.com/ImageToCanvas.html for reference.
+		// This might be kind of sluggish. Is getElementById slow?
 		this.charactersToRedraw.forEach((char: DalekModel.ICharacter) => {
 			char.image = <HTMLImageElement>document.getElementById(char.name);
 
@@ -56,14 +65,20 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+	drawGrid() {
+		//this.ctx.
+	}
+
 	redrawCanvas() {
-		// clear canvas, then draw the elements!
 		this.clearCanvas();
 		this.drawCharacters();
+		// draw other game elements
 	}
 
 	onClick(event) {
 		// stuff happens. Cool stuff!
+		this.doctor.move();
+		this.drawArrow(true);
 	}
 
 	ngOnInit() {

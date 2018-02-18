@@ -10,7 +10,7 @@ export interface ICharacter {
 class Description {
 	short: string;
 	long: string;
-	// Move image to this interface?
+	// Move image to this class?
 }
 
 enum Direction {
@@ -27,13 +27,15 @@ enum Direction {
 	SouthEast = 315
 };
 
-const squareSize: number = 40;
+const squareSize: number = 20;
 
 export class Arrow {
 	name: string;
 	directionInDegrees: number;
 	direction: number;
 	hasChanged: boolean;
+	width: number = squareSize;
+	height: number = squareSize;
 	xpos: number;
 	ypos: number;
 
@@ -211,6 +213,12 @@ export class Doctor implements ICharacter {
 		} else {
 			return Direction.None;
 		}
+	}
+
+	move(): void {
+		// Should be a simple matter of placing the dr where the arrow is,let's try that:
+		this.xpos += this.arrow.xpos;
+		this.ypos += this.arrow.ypos;
 	}
 }
 

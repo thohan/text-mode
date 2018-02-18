@@ -11,8 +11,8 @@
 <div style="width: 800px; margin: 0 auto;">
 	<p>Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}</p>
 	<p>Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}</p>
-	<p>Arrow direction: {{doctor.arrowDirection}}</p>
-	<p>Arrow direction in degrees: {{doctor.arrowDirectionInDegrees | number: '3.0-0'}}</p>
+	<p>Arrow direction: {{doctor.arrow.direction | number: '3.0-0'}}</p>
+	<p>Arrow direction in degrees: {{doctor.arrow.directionInDegrees | number: '3.0-0'}}</p>
 </div>
 <div style="display: block;">
 	<!-- This path works for ng serve -->
