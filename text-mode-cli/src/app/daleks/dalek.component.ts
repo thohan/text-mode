@@ -14,20 +14,27 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	charactersToRedraw: DalekModel.ICharacter[] = [];
 	@ViewChild('canvas') canvas: ElementRef;
 
+	getRect() {
+		return this.canvas.nativeElement.getBoundingClientRect();
+	}
+
 	@HostListener('window:keydown') keyStroke() {
-		// console.log('key pressed: ' + (event as KeyboardEvent).keyCode);
-		this.doctor.move(DalekModel.Input.Keyboard);
+		//if (this.checkNoCollision(this.doctor)) {}
+		const rect = this.getRect();
+		this.doctor.move(DalekModel.Input.Keyboard, rect.width, rect.height);
 		this.drawArrow(true);
 	}
 
 	onClick(event) {
-		this.doctor.move(DalekModel.Input.Mouse);
+		// This will only apply in a designated play area. Will need to define behaviors on the outer bezel/HUD
+		const rect = this.getRect();
+		this.doctor.move(DalekModel.Input.Mouse, rect.width, rect.height);
 		this.drawArrow(true);
 		// The game elements respond:
 	}
 
 	updateCursorPosition(evt) {
-		let rect = this.canvas.nativeElement.getBoundingClientRect();
+		let rect = this.getRect();
 		this.cursor.xpos = evt.clientX - rect.left;
 		this.cursor.ypos = evt.clientY - rect.top;
 	}
@@ -46,17 +53,19 @@ export class DalekComponent implements OnInit, AfterViewInit {
 			if (arrow.name || force) {
 				let hoverArrowImage = <HTMLImageElement>document.getElementById(arrow.name);
 
-				this.ctx.drawImage(hoverArrowImage,
-					this.doctor.xpos + arrow.xpos,
-					this.doctor.ypos + arrow.ypos,
-					arrow.width,
-					arrow.height);
+				if (hoverArrowImage) {
+					this.ctx.drawImage(hoverArrowImage,
+						this.doctor.xpos + arrow.xpos,
+						this.doctor.ypos + arrow.ypos,
+						arrow.width,
+						arrow.height);
+				}
 			}
 		}
 	}
 
 	clearCanvas() {
-		const rect = this.canvas.nativeElement.getBoundingClientRect();
+		const rect = this.getRect();
 		this.ctx.clearRect(0, 0, rect.width, rect.height);
 	}
 

@@ -32,7 +32,8 @@ enum Direction {
 	SouthEast = 315
 };
 
-const squareSize: number = 20;
+// possibly move this junk into a config object...
+export const squareSize: number = 20;
 const squareWidth: number = 40;
 const squareHeight: number = 24;
 
@@ -125,9 +126,8 @@ export class Doctor implements ICharacter {
 	}
 
 	teleport(): void {
-		// Random placement. May not make sense to do this on construction. Probalby not.
-		this.xpos = Math.ceil(Math.random() * squareWidth) * squareSize;
-		this.ypos = Math.ceil(Math.random() * squareHeight) * squareSize;
+		this.xpos = Math.ceil(Math.random() * squareWidth) * squareSize - squareSize;
+		this.ypos = Math.ceil(Math.random() * squareHeight) * squareSize - squareSize;
 	}
 
 	updateArrow(cursor: Cursor): Arrow {
@@ -228,45 +228,95 @@ export class Doctor implements ICharacter {
 		}
 	}
 
-	move(inputType: Input): void {
+	checkNoCollision(inputType: Input, xlimit: number, ylimit: number, keyCode: number = 0): boolean {
+		// Compare the character's coordinates against the play field's boundaries.
+		// The xpos and ypos of character, checking right/bottom against boundaries minus squareSize
+		// I also need directional information in order to make the right call...
+		//const rect = this.canvas.nativeElement.getBoundingClientRect();
+
 		if (inputType === Input.Mouse) {
-			// Should be a simple matter of placing the dr where the arrow is,let's try that:
-			this.xpos += this.arrow.xpos;
-			this.ypos += this.arrow.ypos;
+			if (this.xpos + this.arrow.xpos >= 0
+				&& this.xpos + this.arrow.xpos <= xlimit
+				&& this.ypos + this.arrow.ypos >= 0
+				&& this.ypos + this.arrow.ypos <= ylimit
+			) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		if (inputType === Input.Keyboard) {
-			switch ((event as KeyboardEvent).keyCode) {
-				case 81:	// q - NW
-					this.xpos += -squareSize;
-					this.ypos += -squareSize;
-					break;
-				case 87:	// w - N
-					this.ypos += -squareSize;
-					break;
-				case 69:	// e - NE
-					this.xpos += squareSize;
-					this.ypos += -squareSize;
-					break;
-				case 65:	// a - W
-					this.xpos += -squareSize;
-					break;
-				case 83:	// s - in place
-					break;
-				case 68:	// d - E
-					this.xpos += squareSize;
-					break;
-				case 90:	// z - SW
-					this.xpos += -squareSize;
-					this.ypos += squareSize;
-					break;
-				case 88:	// x - S
-					this.ypos += squareSize;
-					break;
-				case 67:	// c - SE
-					this.xpos += squareSize;
-					this.ypos += squareSize;
-					break;
+			switch (keyCode) {
+				case 81:	// NW
+					return this.xpos - squareSize >= 0 && this.ypos - squareSize >= 0;
+				case 87:	// N
+					return this.ypos - squareSize >= 0;
+				case 69:	// NE
+					return this.xpos + squareSize <= xlimit - squareSize && this.ypos - squareSize >= 0;
+				case 65:	// W
+					return this.xpos - squareSize >= 0;
+				case 83:	// on self
+					return true;
+				case 68:	// E
+					return this.xpos + squareSize <= xlimit - squareSize;
+				case 90:	// SW
+					return this.xpos - squareSize >= 0 && this.ypos <= ylimit;
+				case 88:	// S
+					return this.ypos + squareSize <= ylimit - squareSize;
+				case 67:	// SE
+					return this.xpos + squareSize <= xlimit - squareSize && this.ypos + squareSize <= ylimit - squareSize;
+				default:
+					return false;
+			}
+		}
+
+		return false;
+	}
+
+	move(inputType: Input, xLimit: number, yLimit: number): void {
+		if (inputType === Input.Mouse) {
+			// Should be a simple matter of placing the dr where the arrow is,let's try that:
+			if (this.checkNoCollision(Input.Mouse, xLimit, yLimit)) {
+				this.xpos += this.arrow.xpos;
+				this.ypos += this.arrow.ypos;
+			}
+		}
+
+		if (inputType === Input.Keyboard) {
+			if (this.checkNoCollision(Input.Keyboard, xLimit, yLimit, (event as KeyboardEvent).keyCode)) {
+				switch ((event as KeyboardEvent).keyCode) {
+					case 81: // q - NW
+						this.xpos += -squareSize;
+						this.ypos += -squareSize;
+						break;
+					case 87: // w - N
+						this.ypos += -squareSize;
+						break;
+					case 69: // e - NE
+						this.xpos += squareSize;
+						this.ypos += -squareSize;
+						break;
+					case 65: // a - W
+						this.xpos += -squareSize;
+						break;
+					case 83: // s - in place
+						break;
+					case 68: // d - E
+						this.xpos += squareSize;
+						break;
+					case 90: // z - SW
+						this.xpos += -squareSize;
+						this.ypos += squareSize;
+						break;
+					case 88: // x - S
+						this.ypos += squareSize;
+						break;
+					case 67: // c - SE
+						this.xpos += squareSize;
+						this.ypos += squareSize;
+						break;
+				}
 			}
 		}
 	}
