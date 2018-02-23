@@ -11,7 +11,9 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	cursor: DalekModel.Cursor;
 	ctx: CanvasRenderingContext2D;
 	doctor: DalekModel.Doctor;
+	daleks: DalekModel.Dalek[] = [];
 	charactersToRedraw: DalekModel.ICharacter[] = [];
+	round: number = 1;
 	@ViewChild('canvas') canvas: ElementRef;
 
 	getRect() {
@@ -19,18 +21,30 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('window:keydown') keyStroke() {
-		//if (this.checkNoCollision(this.doctor)) {}
-		const rect = this.getRect();
-		this.doctor.move(DalekModel.Input.Keyboard, rect.width, rect.height);
-		this.drawArrow(true);
+		this.updateGameBoard(DalekModel.Input.Keyboard);
 	}
 
 	onClick(event) {
+		this.updateGameBoard(DalekModel.Input.Mouse);
+	}
+
+	updateGameBoard(inputType: DalekModel.Input) {
 		// This will only apply in a designated play area. Will need to define behaviors on the outer bezel/HUD
 		const rect = this.getRect();
-		this.doctor.move(DalekModel.Input.Mouse, rect.width, rect.height);
-		this.drawArrow(true);
+		this.doctor.move(inputType, rect.width, rect.height);
 		// The game elements respond:
+		for (let dalek of this.daleks) {
+			dalek.respondToMove(this.doctor);
+		}
+
+
+
+		this.redrawCanvas();
+		this.drawArrow(true);
+	}
+
+	goToNextRound() {
+
 	}
 
 	updateCursorPosition(evt) {
@@ -90,6 +104,28 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		//this.ctx.
 	}
 
+	placeDaleks() {
+		for (let i = 0; i < this.round * 5; i++) {
+			let dalek: DalekModel.Dalek = new DalekModel.Dalek();
+
+			do {
+				dalek.teleport();
+			} while(!this.checkPosition(dalek))
+
+			this.daleks.push(dalek);
+		}
+	}
+
+	checkPosition(dalek: DalekModel.Dalek): boolean {
+		for (let item of this.charactersToRedraw) {
+			if (dalek.xpos === item.xpos && dalek.ypos === item.ypos) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	redrawCanvas() {
 		this.clearCanvas();
 		this.drawCharacters();
@@ -106,8 +142,13 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		// Now I can draw stuff! (I just need to remember how...)
 		this.doctor = new DalekModel.Doctor();
 		this.doctor.teleport();
+		this.placeDaleks();
 		this.charactersToRedraw.push(this.doctor);
 		// TODO: Load up enemies, other game elements here, add them to the stuff to draw then draw them.
+		for (let dalek of this.daleks) {
+			this.charactersToRedraw.push(dalek);
+		}
+
 		this.drawCharacters();
 	};
 

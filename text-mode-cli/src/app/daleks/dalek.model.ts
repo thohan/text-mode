@@ -19,7 +19,6 @@ export enum Input {
 }
 
 enum Direction {
-	// I don't know that these numbers are super-useful. I guess I can add behaviors based on them, we'll see...
 	None = 0,
 	OnSelf = 1,
 	East = 360,
@@ -325,10 +324,34 @@ export class Doctor implements ICharacter {
 export class Dalek implements ICharacter {
 	xpos: number;
 	ypos: number;
-	name: string;
+	name: string = 'dalek';
 	image: HTMLImageElement;
-	width: number;
-	height: number;
+	width: number = squareSize;
+	height: number = squareSize;
+
+	teleport(): void {
+		this.xpos = Math.ceil(Math.random() * squareWidth) * squareSize - squareSize;
+		this.ypos = Math.ceil(Math.random() * squareHeight) * squareSize - squareSize;
+	}
+
+	// There may be different responses. This one is the most simple.
+	respondToMove(doctor: Doctor) {
+		if (this.xpos === doctor.xpos) {
+			// don't change xpos
+		} else if (this.xpos > doctor.xpos) {
+			this.xpos -= squareSize;
+		} else if (this.xpos < doctor.xpos) {
+			this.xpos += squareSize;
+		}
+
+		if (this.ypos === doctor.ypos) {
+			// don't change ypos
+		} else if (this.ypos > doctor.ypos) {
+			this.ypos -= squareSize;
+		} else if (this.ypos < doctor.ypos) {
+			this.ypos += squareSize;
+		}
+	}
 }
 
 export class Cursor {
