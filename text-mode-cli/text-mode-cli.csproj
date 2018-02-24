@@ -118,9 +118,14 @@
     <TypeScriptCompile Include="src\app\app.component.spec.ts" />
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\daleks\arrow.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\character.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\config.model.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.component.spec.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.component.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\doctor.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\input.model.ts" />
     <TypeScriptCompile Include="src\app\shared\canvas.component.ts" />
     <TypeScriptCompile Include="src\app\shared\canvas.model.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />

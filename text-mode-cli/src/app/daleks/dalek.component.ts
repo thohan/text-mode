@@ -1,6 +1,14 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, HostListener } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import * as DalekModel from './dalek.model';
+import Doctormodel = require('./doctor.model');
+import Doctor = Doctormodel.Doctor;
+import Dalek = DalekModel.Dalek;
+import Charactermodel = require('./character.model');
+import ICharacter = Charactermodel.ICharacter;
+import InputModel = require('./input.model');
+import Cursor = InputModel.Cursor;
+import Input = InputModel.Input;
 
 @Component({
 	selector: 'daleks',
@@ -8,11 +16,11 @@ import * as DalekModel from './dalek.model';
 })
 
 export class DalekComponent implements OnInit, AfterViewInit {
-	cursor: DalekModel.Cursor;
+	cursor: Cursor;
 	ctx: CanvasRenderingContext2D;
-	doctor: DalekModel.Doctor;
-	daleks: DalekModel.Dalek[] = [];
-	charactersToRedraw: DalekModel.ICharacter[] = [];
+	doctor: Doctor;
+	daleks: Dalek[] = [];
+	charactersToRedraw: ICharacter[] = [];
 	round: number = 1;
 	@ViewChild('canvas') canvas: ElementRef;
 
@@ -21,14 +29,14 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('window:keydown') keyStroke() {
-		this.updateGameBoard(DalekModel.Input.Keyboard);
+		this.updateGameBoard(Input.Keyboard);
 	}
 
 	onClick(event) {
-		this.updateGameBoard(DalekModel.Input.Mouse);
+		this.updateGameBoard(Input.Mouse);
 	}
 
-	updateGameBoard(inputType: DalekModel.Input) {
+	updateGameBoard(inputType: Input) {
 		// This will only apply in a designated play area. Will need to define behaviors on the outer bezel/HUD
 		const rect = this.getRect();
 		this.doctor.move(inputType, rect.width, rect.height);
@@ -87,7 +95,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		// draw on the canvas - Image assets loaded on the dom for use by the canvas.
 		// See http://www.typescriptgames.com/ImageToCanvas.html for reference.
 		// This might be kind of sluggish. Is getElementById slow?
-		this.charactersToRedraw.forEach((char: DalekModel.ICharacter) => {
+		this.charactersToRedraw.forEach((char: ICharacter) => {
 			char.image = <HTMLImageElement>document.getElementById(char.name);
 
 			if (char.image) {
@@ -106,7 +114,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 	placeDaleks() {
 		for (let i = 0; i < this.round * 5; i++) {
-			let dalek: DalekModel.Dalek = new DalekModel.Dalek();
+			let dalek = new Dalek();
 
 			do {
 				dalek.teleport();
@@ -135,12 +143,12 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 
-		this.cursor = new DalekModel.Cursor();
+		this.cursor = new Cursor();
 		this.cursor.xpos = 0;
 		this.cursor.ypos = 0;
 
 		// Now I can draw stuff! (I just need to remember how...)
-		this.doctor = new DalekModel.Doctor();
+		this.doctor = new Doctor();
 		this.doctor.teleport();
 		this.placeDaleks();
 		this.charactersToRedraw.push(this.doctor);

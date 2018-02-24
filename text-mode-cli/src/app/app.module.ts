@@ -7,15 +7,20 @@ import { AppComponent } from './app.component';
 import { DalekComponent } from './daleks/dalek.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DalekComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		DalekComponent
+	],
+	imports: [
+		BrowserModule,
+		AppRoutingModule
+	],
+	providers: [],
+	bootstrap: [
+		AppComponent
+	]
 })
-export class AppModule { }
+
+export class AppModule {
+
+}
