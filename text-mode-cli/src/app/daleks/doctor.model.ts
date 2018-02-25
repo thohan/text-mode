@@ -10,7 +10,7 @@ import ArrowModel = require('./arrow.model');
 import Arrow = ArrowModel.Arrow;
 import InputModel = require('./input.model');
 import Input = InputModel.Input;
-import ICursor = InputModel.ICursor;
+import Cursor = InputModel.Cursor;
 
 export class Doctor implements ICharacter {
 	xpos: number;
@@ -20,6 +20,7 @@ export class Doctor implements ICharacter {
 	width = squareSize;
 	height = squareSize;
 	description: IDescription;
+	isDead = false;
 	arrow: Arrow;
 
 	constructor() {
@@ -39,7 +40,7 @@ export class Doctor implements ICharacter {
 		this.ypos = Math.ceil(Math.random() * squareHeight) * squareSize - squareSize;
 	}
 
-	updateArrow(cursor: ICursor): Arrow {
+	updateArrow(cursor: Cursor): Arrow {
 		const xDiff = cursor.xpos - this.centerX();
 		const yDiff = cursor.ypos - this.centerY();
 		let direction: Direction;
@@ -148,6 +149,7 @@ export class Doctor implements ICharacter {
 				case 65:	// W
 					return this.xpos - squareSize >= 0;
 				case 83:	// on self
+				case 84:	// teleport
 					return true;
 				case 68:	// E
 					return this.xpos + squareSize <= xlimit - squareSize;
@@ -165,12 +167,15 @@ export class Doctor implements ICharacter {
 		return false;
 	}
 
-	move(inputType: Input, xLimit: number, yLimit: number): void {
+	move(inputType: Input, xLimit: number, yLimit: number): boolean {
 		if (inputType === Input.Mouse) {
 			if (this.checkNoCollision(Input.Mouse, xLimit, yLimit)) {
 				this.xpos += this.arrow.xpos;
 				this.ypos += this.arrow.ypos;
+				return true;
 			}
+
+			return false;
 		}
 
 		if (inputType === Input.Keyboard) {
@@ -179,35 +184,42 @@ export class Doctor implements ICharacter {
 					case 81: // q - NW
 						this.xpos += -squareSize;
 						this.ypos += -squareSize;
-						break;
+						return true;
 					case 87: // w - N
 						this.ypos += -squareSize;
-						break;
+						return true;
 					case 69: // e - NE
 						this.xpos += squareSize;
 						this.ypos += -squareSize;
-						break;
+						return true;
 					case 65: // a - W
 						this.xpos += -squareSize;
-						break;
+						return true;
 					case 83: // s - in place
-						break;
+						return true;
 					case 68: // d - E
 						this.xpos += squareSize;
-						break;
+						return true;
 					case 90: // z - SW
 						this.xpos += -squareSize;
 						this.ypos += squareSize;
-						break;
+						return true;
 					case 88: // x - S
 						this.ypos += squareSize;
-						break;
+						return true;
 					case 67: // c - SE
 						this.xpos += squareSize;
 						this.ypos += squareSize;
-						break;
+						return true;
+					case 84: // t - Teleport
+						this.teleport();
+						return true;
+					default:
+						return false;
 				}
 			}
 		}
+
+		return false;
 	}
 }

@@ -1,11 +1,11 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, HostListener } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import * as DalekModel from './dalek.model';
-import Doctormodel = require('./doctor.model');
-import Doctor = Doctormodel.Doctor;
+import DoctorModel = require('./doctor.model');
+import Doctor = DoctorModel.Doctor;
 import Dalek = DalekModel.Dalek;
-import Charactermodel = require('./character.model');
-import ICharacter = Charactermodel.ICharacter;
+import CharacterModel = require('./character.model');
+import ICharacter = CharacterModel.ICharacter;
 import InputModel = require('./input.model');
 import Cursor = InputModel.Cursor;
 import Input = InputModel.Input;
@@ -21,10 +21,10 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	doctor: Doctor;
 	daleks: Dalek[] = [];
 	charactersToRedraw: ICharacter[] = [];
-	round: number = 1;
+	round = 0;
 	@ViewChild('canvas') canvas: ElementRef;
 
-	getRect() {
+	getRect(): ClientRect {
 		return this.canvas.nativeElement.getBoundingClientRect();
 	}
 
@@ -32,27 +32,67 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		this.updateGameBoard(Input.Keyboard);
 	}
 
-	onClick(event) {
+	onClick(event): void {
 		this.updateGameBoard(Input.Mouse);
 	}
 
-	updateGameBoard(inputType: Input) {
-		// This will only apply in a designated play area. Will need to define behaviors on the outer bezel/HUD
+	updateGameBoard(inputType: Input): void {
 		const rect = this.getRect();
-		this.doctor.move(inputType, rect.width, rect.height);
-		// The game elements respond:
-		for (let dalek of this.daleks) {
-			dalek.respondToMove(this.doctor);
+		if (this.doctor.move(inputType, rect.width, rect.height)) {
+			// The game elements respond:
+			for (let dalek of this.daleks) {
+				dalek.respondToMove(this.doctor);
+			}
+
+			// Check for collisions:
+			for (let charA of this.charactersToRedraw) {
+				for (let charB of this.charactersToRedraw) {
+					if (charA !== charB
+						&& (!charA.isDead || !charB.isDead)
+						&& charA.xpos === charB.xpos
+						&& charA.ypos === charB.ypos
+					) {
+						charA.isDead = true;
+						charB.isDead = true;
+
+						if (charA instanceof Doctor || charB instanceof Doctor) {
+							// game over, you died!
+						}
+					}
+				}
+			}
 		}
 
-
+		if (this.roundIsComplete()) {
+			this.startNextRound();
+		}
 
 		this.redrawCanvas();
 		this.drawArrow(true);
 	}
 
-	goToNextRound() {
+	roundIsComplete(): boolean {
+		for (let char of this.charactersToRedraw) {
+			if (!(char instanceof Doctor) && !char.isDead) {
+				return false;
+			}
+		}
 
+		return true;
+	}
+
+	startNextRound() {
+		this.round++;
+		this.charactersToRedraw.length = 0;
+		this.daleks.length = 0;	// Probably makes the most sense to not leave the junk heaps on the play area at the beginning of the round
+		this.doctor = new Doctor();
+		this.doctor.teleport();
+		this.placeDaleks();
+		this.charactersToRedraw.push(this.doctor);
+
+		for (let dalek of this.daleks) {
+			this.charactersToRedraw.push(dalek);
+		}
 	}
 
 	updateCursorPosition(evt) {
@@ -92,24 +132,21 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	drawCharacters() {
-		// draw on the canvas - Image assets loaded on the dom for use by the canvas.
-		// See http://www.typescriptgames.com/ImageToCanvas.html for reference.
-		// This might be kind of sluggish. Is getElementById slow?
 		this.charactersToRedraw.forEach((char: ICharacter) => {
-			char.image = <HTMLImageElement>document.getElementById(char.name);
+			if (char.isDead) {
+				char.image = <HTMLImageElement>document.getElementById('junkheap');
+			} else {
+				char.image = <HTMLImageElement>document.getElementById(char.name);
+			}
 
 			if (char.image) {
 				this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
 			}
 
-			char.image.onload = () => {
-				this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
-			}
+			//char.image.onload = () => {
+			//	this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
+			//}
 		});
-	}
-
-	drawGrid() {
-		//this.ctx.
 	}
 
 	placeDaleks() {
@@ -117,14 +154,14 @@ export class DalekComponent implements OnInit, AfterViewInit {
 			let dalek = new Dalek();
 
 			do {
-				dalek.teleport();
-			} while(!this.checkPosition(dalek))
+				dalek.place();
+			} while (!this.checkPositionNotTaken(dalek))
 
 			this.daleks.push(dalek);
 		}
 	}
 
-	checkPosition(dalek: DalekModel.Dalek): boolean {
+	checkPositionNotTaken(dalek: DalekModel.Dalek): boolean {
 		for (let item of this.charactersToRedraw) {
 			if (dalek.xpos === item.xpos && dalek.ypos === item.ypos) {
 				return false;
@@ -142,22 +179,12 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
-
 		this.cursor = new Cursor();
-		this.cursor.xpos = 0;
-		this.cursor.ypos = 0;
+		this.startNextRound();
 
-		// Now I can draw stuff! (I just need to remember how...)
-		this.doctor = new Doctor();
-		this.doctor.teleport();
-		this.placeDaleks();
-		this.charactersToRedraw.push(this.doctor);
-		// TODO: Load up enemies, other game elements here, add them to the stuff to draw then draw them.
-		for (let dalek of this.daleks) {
-			this.charactersToRedraw.push(dalek);
-		}
-
-		this.drawCharacters();
+		setTimeout(() => {
+			this.drawCharacters();
+		}, 200);
 	};
 
 	ngAfterViewInit() {

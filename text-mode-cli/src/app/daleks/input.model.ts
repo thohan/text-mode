@@ -1,9 +1,10 @@
 ﻿export enum Input {
 	Keyboard,
-	Mouse
+	Mouse,
+	Touchpad
 }
 
 export class Cursor {
-	xpos: number;
-	ypos: number;
+	xpos = 0;
+	ypos = 0;
 }

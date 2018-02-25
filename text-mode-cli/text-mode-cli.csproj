@@ -85,6 +85,7 @@
     <Content Include="src\assets\arroww.jpg" />
     <Content Include="src\assets\dalek.jpg" />
     <Content Include="src\assets\doctor.jpg" />
+    <Content Include="src\assets\junkheap.jpg" />
     <Content Include="src\tsconfig.app.json" />
     <Content Include="src\tsconfig.spec.json" />
     <Content Include="README.md" />
