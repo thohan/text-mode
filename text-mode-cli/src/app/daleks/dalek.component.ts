@@ -9,6 +9,9 @@ import ICharacter = CharacterModel.ICharacter;
 import InputModel = require('./input.model');
 import Cursor = InputModel.Cursor;
 import Input = InputModel.Input;
+import ScoreModel = require('./score.model');
+import Score = ScoreModel.Score;
+import ConfigModel = require('./config.model');
 
 @Component({
 	selector: 'daleks',
@@ -19,9 +22,9 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	cursor: Cursor;
 	ctx: CanvasRenderingContext2D;
 	doctor: Doctor;
-	daleks: Dalek[] = [];
 	charactersToRedraw: ICharacter[] = [];
 	round = 0;
+	score: Score;
 	@ViewChild('canvas') canvas: ElementRef;
 
 	getRect(): ClientRect {
@@ -40,35 +43,91 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		const rect = this.getRect();
 		if (this.doctor.move(inputType, rect.width, rect.height)) {
 			// The game elements respond:
-			for (let dalek of this.daleks) {
-				dalek.respondToMove(this.doctor);
+			for (let char of this.charactersToRedraw) {
+				if (char instanceof Dalek) {
+					char.respondToMove(this.doctor);
+				}
 			}
 
 			// Check for collisions:
 			for (let charA of this.charactersToRedraw) {
+				let wayCount = 1;
+				let isJunkPile = false;
+				let setDead = false;
+
 				for (let charB of this.charactersToRedraw) {
 					if (charA !== charB
-						&& (!charA.isDead || !charB.isDead)
+						&& !charB.isDead
 						&& charA.xpos === charB.xpos
 						&& charA.ypos === charB.ypos
 					) {
-						charA.isDead = true;
-						charB.isDead = true;
-
-						if (charA instanceof Doctor || charB instanceof Doctor) {
-							// game over, you died!
+						if (charA.isDead) {
+							isJunkPile = true;
+						} else {
+							wayCount++;
 						}
+
+						charB.isDead = true;
+						setDead = true;
+					}
+				}
+
+				if (!charA.isDead) {
+					charA.isDead = setDead;
+				}
+
+				if (charA.isDead) {
+					if (wayCount === 3) {
+						// score a three-way collision
+						if (isJunkPile) {
+							// score a three-way junkpile collision
+							this.score.countThreeWayJunkPileCurrent++;
+							this.score.countThreeWayJunkPileAllTime++;
+						} else {
+							// score a three-way collision
+							this.score.countThreeWayCollisionCurrent++;
+							this.score.countThreeWayCollisionAllTime++;
+						}
+					} else if (wayCount === 2) {
+						// score a two-way collision
+						if (isJunkPile) {
+							this.score.countTwoWayJunkPileCurrent++;
+							this.score.countTwoWayJunkPileAllTime++;
+						} else {
+							this.score.countTwoWayCollisionCurrent++;
+							this.score.countTwoWayCollisionAllTime++;
+						}
+					} else if (wayCount === 1 && setDead) {
+						// it must be a one-way into junk, score that
+						this.score.countJunkPileCurrent++;
+						this.score.countJunkPileAllTime++;
+					} else if (wayCount === 1) {
+						// It's just always one at the outset. Not a problem
+					} else {
+						console.log(`error: the wayCount was ${wayCount}`);
 					}
 				}
 			}
-		}
 
-		if (this.roundIsComplete()) {
-			this.startNextRound();
-		}
+			//for (let char of this.charactersToRedraw) {
+			//	if (char instanceof Dalek) {
+			//		if (char.points > 0) {
+			//			char.isDead = true;
+			//		}
+			//	}
+			//}
 
-		this.redrawCanvas();
-		this.drawArrow(true);
+			this.score.update(this.charactersToRedraw);
+
+			if (this.doctor.isDead) {
+				this.gameOver();
+			} else if (this.roundIsComplete()) {
+				this.startNextRound();
+			}
+
+			this.redrawCanvas();
+			this.drawArrow(true);
+		}
 	}
 
 	roundIsComplete(): boolean {
@@ -84,15 +143,14 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	startNextRound() {
 		this.round++;
 		this.charactersToRedraw.length = 0;
-		this.daleks.length = 0;	// Probably makes the most sense to not leave the junk heaps on the play area at the beginning of the round
 		this.doctor = new Doctor();
 		this.doctor.teleport();
-		this.placeDaleks();
 		this.charactersToRedraw.push(this.doctor);
+		this.placeDaleks();
+	}
 
-		for (let dalek of this.daleks) {
-			this.charactersToRedraw.push(dalek);
-		}
+	gameOver(): void {
+
 	}
 
 	updateCursorPosition(evt) {
@@ -142,22 +200,18 @@ export class DalekComponent implements OnInit, AfterViewInit {
 			if (char.image) {
 				this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
 			}
-
-			//char.image.onload = () => {
-			//	this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
-			//}
 		});
 	}
 
 	placeDaleks() {
-		for (let i = 0; i < this.round * 5; i++) {
+		for (let i = 0; i < this.round * ConfigModel.daleksPerRound; i++) {
 			let dalek = new Dalek();
 
 			do {
 				dalek.place();
 			} while (!this.checkPositionNotTaken(dalek))
 
-			this.daleks.push(dalek);
+			this.charactersToRedraw.push(dalek);
 		}
 	}
 
@@ -180,6 +234,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 		this.cursor = new Cursor();
+		this.score = new Score();
 		this.startNextRound();
 
 		setTimeout(() => {
