@@ -14,7 +14,7 @@ import Score = ScoreModel.Score;
 import ConfigModel = require('./config.model');
 
 @Component({
-	selector: 'daleks',
+	selector: 'app-daleks',
 	templateUrl: './dalek.component.html'
 })
 
