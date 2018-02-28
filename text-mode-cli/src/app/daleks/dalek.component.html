@@ -9,10 +9,15 @@
 </div>
 <!-- Testing information -->
 <div style="width: 800px; margin: 0 auto;">
+	<p>Score: {{score.runningScore | number: '4.0-0'}}</p>
+	<p>one way junk: {{score.countJunkPileCurrent}}</p>
+	<p>two way: {{score.countTwoWayCollisionCurrent}} / two-way junk: {{score.countTwoWayJunkPileCurrent}}</p>
+
+	<p>three way: {{score.countThreeWayCollisionCurrent}} / three-way junk: {{score.countThreeWayJunkPileCurrent}}</p>
 	<p>Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}</p>
 	<p>Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}</p>
-	<p>Arrow direction: {{doctor.arrowDirection}}</p>
-	<p>Arrow direction in degrees: {{doctor.arrowDirectionInDegrees | number: '3.0-0'}}</p>
+	<p>Arrow direction: {{doctor.arrow.direction | number: '3.0-0'}}</p>
+	<p>Arrow direction in degrees: {{doctor.arrow.directionInDegrees | number: '3.0-0'}}</p>
 </div>
 <div style="display: block;">
 	<!-- This path works for ng serve -->
@@ -27,5 +32,7 @@
 	<img src="./src/app/assets/arrowsw.jpg" id="arrowsw" />
 	<img src="./src/app/assets/arrows.jpg" id="arrows" />
 	<img src="./src/app/assets/arrowse.jpg" id="arrowse" />
+	<img src="./src/app/assets/dalek.jpg" id="dalek" />
+	<img src="./src/app/assets/junkheap.jpg" id="junkheap" />
 	<!-- TODO: Make the paths align! -->
 </div>
