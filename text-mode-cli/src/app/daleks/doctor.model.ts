@@ -154,7 +154,7 @@ export class Doctor implements ICharacter {
 				case 68:	// E
 					return this.xpos + squareSize <= xlimit - squareSize;
 				case 90:	// SW
-					return this.xpos - squareSize >= 0 && this.ypos <= ylimit;
+                    return this.xpos - squareSize >= 0 && this.ypos + squareSize <= ylimit - squareSize;
 				case 88:	// S
 					return this.ypos + squareSize <= ylimit - squareSize;
 				case 67:	// SE
