@@ -52,8 +52,9 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 			// Check for collisions:
 			for (let charA of this.charactersToRedraw) {
-				let wayCount = 1;
+				let wayCount = 0;
 				let isJunkPile = false;
+				let collisionOccurred = false;
 
 				for (let charB of this.charactersToRedraw) {
 					if (charA !== charB
@@ -61,10 +62,18 @@ export class DalekComponent implements OnInit, AfterViewInit {
 						&& charA.xpos === charB.xpos
 						&& charA.ypos === charB.ypos
 					) {
+						collisionOccurred = true;
+
 						if (charA.isDead || charB.isDead) {
 							isJunkPile = true;
-						} else {
-							wayCount++
+						}
+
+						if (!charA.markAsDead) {
+							wayCount++;
+						}
+
+						if (!charB.markAsDead) {
+							wayCount++;
 						}
 
 						charA.markAsDead = true;
@@ -72,7 +81,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 					}
 				}
 
-				if (charA.markAsDead && !charA.isDead) {
+				if (collisionOccurred) {
 					if (wayCount === 3) {
 						// score a three-way collision
 						if (isJunkPile) {
@@ -234,7 +243,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		this.charactersToRedraw.push(dalek2);
 
 		dalek3.xpos = this.doctor.xpos - 2 * this.squareSize;
-		dalek3.ypos = this.doctor.ypos - 4 * this.squareSize;
+		dalek3.ypos = this.doctor.ypos - 4 * this.squareSize; 
 		this.charactersToRedraw.push(dalek3);
 
 		dalek4.xpos = this.doctor.xpos + 0 * this.squareSize;
