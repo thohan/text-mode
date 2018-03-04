@@ -18,6 +18,7 @@ export class Dalek implements ICharacter {
 	height = squareSize;
 	description: IDescription;
 	isDead = false;
+	markAsDead = false;
 
 	// This is pretty much the same as the teleport() method on the doctor.
 	place(): void {

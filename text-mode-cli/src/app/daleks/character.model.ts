@@ -7,6 +7,7 @@
 	height: number;
 	description: IDescription;
 	isDead: boolean;
+	markAsDead: boolean;
 }
 
 export interface IDescription {

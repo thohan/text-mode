@@ -17,13 +17,4 @@ describe('DalekComponent', () => {
 		const dalek = fixture.debugElement.componentInstance;
 		expect(dalek).toBeTruthy();
 	}));
-	describe('on click', () => {
-		it('should call updateGameBoard', (() => {
-			const fixture = TestBed.createComponent(DalekComponent);
-			const dalek = fixture.debugElement.componentInstance;
-			spyOn(dalek, 'onClick');
-			dalek.onClick();
-			expect(dalek.onClick).toHaveBeenCalled();
-		}));
-	});
 });

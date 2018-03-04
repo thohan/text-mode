@@ -21,6 +21,7 @@ export class Doctor implements ICharacter {
 	height = squareSize;
 	description: IDescription;
 	isDead = false;
+	markAsDead = false;
 	arrow: Arrow;
 
 	constructor() {
@@ -38,6 +39,11 @@ export class Doctor implements ICharacter {
 	teleport(): void {
 		this.xpos = Math.ceil(Math.random() * squareWidth) * squareSize - squareSize;
 		this.ypos = Math.ceil(Math.random() * squareHeight) * squareSize - squareSize;
+	}
+
+	placeInCenter(): void {
+		this.xpos = squareWidth * squareSize / 2 - squareSize;
+		this.ypos = squareHeight * squareSize / 2 - squareSize;
 	}
 
 	updateArrow(cursor: Cursor): Arrow {
@@ -154,7 +160,7 @@ export class Doctor implements ICharacter {
 				case 68:	// E
 					return this.xpos + squareSize <= xlimit - squareSize;
 				case 90:	// SW
-                    return this.xpos - squareSize >= 0 && this.ypos + squareSize <= ylimit - squareSize;
+					return this.xpos - squareSize >= 0 && this.ypos + squareSize <= ylimit - squareSize;
 				case 88:	// S
 					return this.ypos + squareSize <= ylimit - squareSize;
 				case 67:	// SE
