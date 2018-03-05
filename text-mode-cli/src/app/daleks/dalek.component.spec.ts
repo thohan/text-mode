@@ -1,20 +1,28 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserModule } from '@angular/platform-browser';
 import { DalekComponent } from './dalek.component';
 describe('DalekComponent', () => {
+	// https://stackoverflow.com/a/43950991/13578 had the info I needed (I think...)
+	let component: DalekComponent;
+	let fixture: ComponentFixture<DalekComponent>;
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				RouterTestingModule
+				RouterTestingModule,
+				BrowserModule
 			],
 			declarations: [
 				DalekComponent
-			],
+			]
 		}).compileComponents();
 	}));
-	it('should create the app', async(() => {
-		const fixture = TestBed.createComponent(DalekComponent);
-		const dalek = fixture.debugElement.componentInstance;
-		expect(dalek).toBeTruthy();
+
+	it('should be instantiated', async(() => {
+		fixture = TestBed.createComponent(DalekComponent);
+		component = fixture.debugElement.componentInstance;
+		fixture.detectChanges();
+		expect(component).toBeTruthy();
 	}));
 });

@@ -11,14 +11,14 @@ describe('ScoreModel.Score', () => {
 				RouterTestingModule
 			],
 			declarations: [
-				ScoreModel
+				//ScoreModel
 			],
 		}).compileComponents();
 
-		let score = new ScoreModel.Score();
+		
 	}));
 	it('to have a Combos object defined upon construction', (() => {
-		
+		score = new ScoreModel.Score();
 		expect(score.combos).toBeDefined();
 	}));
 });
