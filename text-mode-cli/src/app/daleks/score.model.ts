@@ -3,41 +3,180 @@ import ICharacter = CharacterModel.ICharacter;
 import DoctorModel = require('./doctor.model');
 import Doctor = DoctorModel.Doctor;
 
-export class Score {
-	readonly JunkPile = 5;
-	readonly TwoWayJunkPile = 10;
-	readonly ThreeWayJunkPile = 20;
-	readonly TwoWay = 10;
-	readonly ThreeWay = 20;
-	readonly SonicScrewdriver = 10;
-	// TODO: If two or more collisions happen at the same time at different locations, do a multiplier
-	readonly RoundComplete = 10;
-	// Other stuff
+export class Combos {
+	comboSingleCount = 0;
+	comboTwoWayCollision = 0;
+	comboTwoWayJunkPile = 0;
+	comboThreeWayCollision = 0;
+	comboThreeWayJunkPile = 0;
+}
 
-	scoreCurrent: number = 0;
-	scoreAllTime: number = 0;
-	countJunkPileCurrent: number = 0;
-	countJunkPileAllTime: number = 0;
-	countTwoWayJunkPileCurrent: number = 0;
-	countTwoWayJunkPileAllTime: number = 0;
-	countThreeWayJunkPileCurrent: number = 0;
-	countThreeWayJunkPileAllTime: number = 0;
-	countTwoWayCollisionCurrent: number = 0;
-	countTwoWayCollisionAllTime: number = 0;
-	countThreeWayCollisionCurrent: number = 0;
-	countThreeWayCollisionAllTime: number = 0;
-	countSonicScrewDriverCurrent: number = 0;
-	countSonicScrewDriverAllTime: number = 0;
-	countRoundsCompleteAllTime: number = 0;
-	countRoundFiveCompleteAllTime: number = 0;
-	countRoundTenCompleteAllTime: number = 0;
-	countRoundFifteenCompleteAllTime: number = 0;
-	countRoundTwentyCompleteAllTime: number = 0;
-	countRoundTwentyFiveCompleteAllTime: number = 0;
-	countRoundThirtyCompleteAllTime: number = 0;
+export class Score {
+	// event scores:
+	readonly JunkPile = 10;
+	readonly TwoWayJunkPile = 25;
+	readonly ThreeWayJunkPile = 40;
+	readonly TwoWay = 25;
+	readonly ThreeWay = 40;
+	readonly SonicScrewdriver = 10;
+	readonly RoundComplete = 50;	// Not sure about this one. Seems like I'd really want to reward finishing a round. Maybe 10 * the round, e.g. 30 for completing the third round.
+
+	// score multipliers
+	// I have no idea what would be appropriate.
+	// Maybe use an arbitrary point value rather than a multiplier.
+	readonly TwoPlusOneCombox2 = 1.2;
+	readonly TwoPlusOneCombox3 = 1.5;
+	readonly ThreePlusOneCombox2 = 1.25;
+	readonly ThreePlusOneCombox3 = 1.6;
+	readonly ThreePlusTwoCombox2 = 1.3;
+	readonly ThreePlusTwoCombox3 = 1.7;
+	readonly ThreePlusTwoPlusOneCombox2 = 2;
+	readonly ThreePlusTwoPlusOneCombox3 = 3;
+
+	// total score:
+	scoreCurrent = 0;
+	scoreAllTime = 0;
+
+	// event counters:
+	countJunkPileCurrent = 0;
+	countJunkPileAllTime = 0;
+	countTwoWayJunkPileCurrent = 0;
+	countTwoWayJunkPileAllTime = 0;
+	countThreeWayJunkPileCurrent = 0;
+	countThreeWayJunkPileAllTime = 0;
+	countTwoWayCollisionCurrent = 0;
+	countTwoWayCollisionAllTime = 0;
+	countThreeWayCollisionCurrent = 0;
+	countThreeWayCollisionAllTime = 0;
+	countSonicScrewDriverCurrent = 0;
+	countSonicScrewDriverAllTime = 0;
+	countRoundsCompleteAllTime = 0;
+	countRoundFiveCompleteAllTime = 0;
+	countRoundTenCompleteAllTime = 0;
+	countRoundFifteenCompleteAllTime = 0;
+	countRoundTwentyCompleteAllTime = 0;
+	countRoundTwentyFiveCompleteAllTime = 0;
+	countRoundThirtyCompleteAllTime = 0;
+
+	// combo counters:
+	countJunkPilex2Current = 0;
+	countJunkPilex2AllTime = 0;
+	countJunkPilex3Current = 0;
+	countJunkPilex3AllTime = 0;
+	// possibly go x4, x5, x6, etc.
+	countTwoWayJunkPilex2Current = 0;
+	countTwoWayJunkPilex2AllTime = 0;
+	countTwoWayJunkPilex3Current = 0;
+	countTwoWayJunkPilex3AllTime = 0;
+	countTwoWayCollisionx2Current = 0;
+	countTwoWayCollisionx2AllTime = 0;
+	countTwoWayCollisionx3Current = 0;
+	countTwoWayCollisionx3AllTime = 0;
+	// maybe go x4, x5, etc.
+	countThreeWayJunkPilex2Current = 0;
+	countThreeWayJunkPilex2AllTime = 0;
+	countThreeWayJunkPilex3Current = 0;
+	countThreeWayJunkPilex3AllTime = 0;
+	countThreeWayCollisionx2Current = 0;
+	countThreeWayCollisionx2AllTime = 0;
+	countThreeWayCollisionx3Current = 0;
+	countThreeWayCollisionx3AllTime = 0;
+	// maybe go x4, x5, etc.
+	countTwoPlusOneComboCurrent = 0;
+	countTwoPlusOneComboAllTime = 0;
+	countThreePlusOneComboCurrent = 0;
+	countThreePlusOneComboAllTime = 0;
+	countThreePlusTwoComboCurrent = 0;
+	countThreePlusTwoComboAllTime = 0;
+	countThreePlusTwoPlusOneComboCurrent = 0;
+	countThreePlusTwoPlusOneComboAllTime = 0;
+
+	combos: Combos;
 
 	constructor() {
 		this.scoreCurrent = 0;
+		this.combos = new Combos;
+	}
+
+	processCombos() {
+		switch (this.combos.comboSingleCount) {
+			case 2:
+				this.countJunkPilex2Current++;
+				this.countJunkPilex2AllTime++;
+				break;
+			case 3:
+				this.countJunkPilex3Current++;
+				this.countJunkPilex3AllTime++;
+				break;
+		}
+
+		switch (this.combos.comboTwoWayJunkPile) {
+			case 2:
+				this.countTwoWayJunkPilex2Current++;
+				this.countTwoWayJunkPilex2AllTime++;
+				break;
+			case 3:
+				this.countTwoWayJunkPilex3Current++;
+				this.countTwoWayJunkPilex3AllTime++;
+				break;
+		}
+
+		switch (this.combos.comboTwoWayCollision) {
+			case 2:
+				this.countTwoWayCollisionx2Current++;
+				this.countTwoWayCollisionx2AllTime++;
+				break;
+			case 3:
+				this.countTwoWayCollisionx3Current++;
+				this.countTwoWayCollisionx3AllTime++;
+				break;
+		}
+
+		switch (this.combos.comboThreeWayJunkPile) {
+			case 2:
+				this.countThreeWayJunkPilex2Current++;
+				this.countThreeWayJunkPilex2AllTime++;
+				break;
+			case 3:
+				this.countThreeWayJunkPilex3Current++;
+				this.countThreeWayJunkPilex3AllTime++;
+				break;
+		}
+
+		switch (this.combos.comboThreeWayCollision) {
+			case 2:
+				this.countThreeWayCollisionx2Current++;
+				this.countThreeWayCollisionx2AllTime++;
+				break;
+			case 3:
+				this.countThreeWayCollisionx3Current++;
+				this.countThreeWayCollisionx3AllTime++;
+				break;
+		}
+
+		// Now for the combo combos. I'm not distinguishing between junkpiles and non-junkpile collisions for these
+		if (this.combos.comboSingleCount > 0
+			&& (this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
+			&& (this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
+		) {
+			this.countThreePlusTwoPlusOneComboCurrent++;
+			this.countThreePlusTwoPlusOneComboAllTime++;
+		} else if ((this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
+			&& (this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
+		) {
+			this.countThreePlusTwoComboCurrent++;
+			this.countThreePlusTwoComboAllTime++;
+		} else if ((this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
+			&& this.combos.comboSingleCount > 0
+		) {
+			this.countThreePlusOneComboCurrent++;
+			this.countThreePlusOneComboAllTime++;
+		} else if ((this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
+			&& this.combos.comboSingleCount
+		) {
+			this.countTwoPlusOneComboCurrent++;
+			this.countTwoPlusOneComboAllTime++;
+		}
 	}
 
 	update(chars: ICharacter[]): void {

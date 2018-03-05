@@ -26,6 +26,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	round = 0;
 	score: Score;
 	@ViewChild('canvas') canvas: ElementRef;
+	squareSize = ConfigModel.squareSize;
 
 	getRect(): ClientRect {
 		return this.canvas.nativeElement.getBoundingClientRect();
@@ -49,75 +50,86 @@ export class DalekComponent implements OnInit, AfterViewInit {
 				}
 			}
 
-			// Check for collisions:
+			// Check for collisions/update isDead status/score/counts
+			// Does this belong in score.model? It is for scoring and counts, but it also modifies the bots.
+
 			for (let charA of this.charactersToRedraw) {
-				let wayCount = 1;
+				let wayCount = 0;
 				let isJunkPile = false;
-				let setDead = false;
+				let collisionOccurred = false;
 
 				for (let charB of this.charactersToRedraw) {
 					if (charA !== charB
-						&& !charB.isDead
+						&& (!charA.isDead || !charB.isDead)
 						&& charA.xpos === charB.xpos
 						&& charA.ypos === charB.ypos
 					) {
-						if (charA.isDead) {
+						collisionOccurred = true;
+
+						if (charA.isDead || charB.isDead) {
 							isJunkPile = true;
-						} else {
+						}
+
+						if (!charA.markAsDead) {
 							wayCount++;
 						}
 
-						charB.isDead = true;
-						setDead = true;
+						if (!charB.markAsDead) {
+							wayCount++;
+						}
+
+						charA.markAsDead = true;
+						charB.markAsDead = true;
 					}
 				}
 
-				if (!charA.isDead) {
-					charA.isDead = setDead;
-				}
-
-				if (charA.isDead) {
+				if (collisionOccurred) {
 					if (wayCount === 3) {
 						// score a three-way collision
 						if (isJunkPile) {
 							// score a three-way junkpile collision
 							this.score.countThreeWayJunkPileCurrent++;
 							this.score.countThreeWayJunkPileAllTime++;
+							this.score.combos.comboSingleCount++;
 						} else {
 							// score a three-way collision
 							this.score.countThreeWayCollisionCurrent++;
 							this.score.countThreeWayCollisionAllTime++;
+							this.score.combos.comboThreeWayCollision++;
 						}
 					} else if (wayCount === 2) {
 						// score a two-way collision
 						if (isJunkPile) {
 							this.score.countTwoWayJunkPileCurrent++;
 							this.score.countTwoWayJunkPileAllTime++;
+							this.score.combos.comboTwoWayJunkPile++;
 						} else {
 							this.score.countTwoWayCollisionCurrent++;
 							this.score.countTwoWayCollisionAllTime++;
+							this.score.combos.comboTwoWayCollision++;
 						}
-					} else if (wayCount === 1 && setDead) {
+					} else if (wayCount === 1) {
 						// it must be a one-way into junk, score that
 						this.score.countJunkPileCurrent++;
 						this.score.countJunkPileAllTime++;
-					} else if (wayCount === 1) {
-						// It's just always one at the outset. Not a problem
+						this.score.combos.comboSingleCount++;
 					} else {
 						console.log(`error: the wayCount was ${wayCount}`);
 					}
 				}
+
+				// TODO: Score combos!
+				this.score.processCombos();
+
+				// Only set as dead after all of the iterations and such.
+				for (let char of this.charactersToRedraw) {
+					if (char.markAsDead) {
+						char.isDead = true;
+					}
+				}
 			}
 
-			//for (let char of this.charactersToRedraw) {
-			//	if (char instanceof Dalek) {
-			//		if (char.points > 0) {
-			//			char.isDead = true;
-			//		}
-			//	}
-			//}
-
-			this.score.update(this.charactersToRedraw);
+			//this.score.update(this.charactersToRedraw);
 
 			if (this.doctor.isDead) {
 				this.gameOver();
@@ -140,13 +152,22 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		return true;
 	}
 
-	startNextRound() {
+	startNextRound(): void {
 		this.round++;
 		this.charactersToRedraw.length = 0;
 		this.doctor = new Doctor();
 		this.doctor.teleport();
 		this.charactersToRedraw.push(this.doctor);
 		this.placeDaleks();
+	}
+
+	// This is for testing but it is possible that I might want to place bots arbitrarily , we'll see.
+	startTestRound(): void {
+		this.charactersToRedraw.length = 0;
+		this.doctor = new Doctor();
+		this.doctor.placeInCenter();
+		this.charactersToRedraw.push(this.doctor);
+		this.placeDaleksTest();
 	}
 
 	gameOver(): void {
@@ -184,12 +205,12 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	clearCanvas() {
+	clearCanvas(): void {
 		const rect = this.getRect();
 		this.ctx.clearRect(0, 0, rect.width, rect.height);
 	}
 
-	drawCharacters() {
+	drawCharacters(): void {
 		this.charactersToRedraw.forEach((char: ICharacter) => {
 			if (char.isDead) {
 				char.image = <HTMLImageElement>document.getElementById('junkheap');
@@ -203,7 +224,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	placeDaleks() {
+	placeDaleks(): void {
 		for (let i = 0; i < this.round * ConfigModel.daleksPerRound; i++) {
 			let dalek = new Dalek();
 
@@ -213,6 +234,37 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 			this.charactersToRedraw.push(dalek);
 		}
+	}
+
+	placeDaleksTest(): void {
+		// This is some very specific placement so as to simulate scenarios that should lead to some specific events/counters/scorings
+		let dalek1 = new Dalek();
+		let dalek2 = new Dalek();
+		let dalek3 = new Dalek();
+		let dalek4 = new Dalek();
+		let dalek5 = new Dalek();
+
+		// 1 - 2 - next to each other above player
+		dalek1.xpos = this.doctor.xpos + 0 * this.squareSize;
+		dalek1.ypos = this.doctor.ypos - 3 * this.squareSize;
+		this.charactersToRedraw.push(dalek1);
+
+		dalek2.xpos = this.doctor.xpos + 1 * this.squareSize;
+		dalek2.ypos = this.doctor.ypos - 3 * this.squareSize;
+		this.charactersToRedraw.push(dalek2);
+
+		// 3 - 5 - above the first two, one space apart
+		dalek3.xpos = this.doctor.xpos - 2 * this.squareSize;
+		dalek3.ypos = this.doctor.ypos - 4 * this.squareSize;
+		this.charactersToRedraw.push(dalek3);
+
+		dalek4.xpos = this.doctor.xpos + 0 * this.squareSize;
+		dalek4.ypos = this.doctor.ypos - 4 * this.squareSize;
+		this.charactersToRedraw.push(dalek4);
+
+		dalek5.xpos = this.doctor.xpos + 2 * this.squareSize;
+		dalek5.ypos = this.doctor.ypos - 4 * this.squareSize;
+		this.charactersToRedraw.push(dalek5);
 	}
 
 	checkPositionNotTaken(dalek: DalekModel.Dalek): boolean {
@@ -235,7 +287,8 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 		this.cursor = new Cursor();
 		this.score = new Score();
-		this.startNextRound();
+		//this.startNextRound();	// Comment out for testing! I want to set up some scenarios with some specific placement of some bots
+		this.startTestRound();
 
 		setTimeout(() => {
 			this.drawCharacters();
