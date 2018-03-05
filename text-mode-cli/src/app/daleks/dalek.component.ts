@@ -14,7 +14,7 @@ import Score = ScoreModel.Score;
 import ConfigModel = require('./config.model');
 
 @Component({
-	selector: 'app-daleks',
+	selector: 'daleks',
 	templateUrl: './dalek.component.html'
 })
 
@@ -50,7 +50,9 @@ export class DalekComponent implements OnInit, AfterViewInit {
 				}
 			}
 
-			// Check for collisions:
+			// Check for collisions/update isDead status/score/counts
+			// Does this belong in score.model? It is for scoring and counts, but it also modifies the bots.
+
 			for (let charA of this.charactersToRedraw) {
 				let wayCount = 0;
 				let isJunkPile = false;
@@ -88,28 +90,36 @@ export class DalekComponent implements OnInit, AfterViewInit {
 							// score a three-way junkpile collision
 							this.score.countThreeWayJunkPileCurrent++;
 							this.score.countThreeWayJunkPileAllTime++;
+							this.score.combos.comboSingleCount++;
 						} else {
 							// score a three-way collision
 							this.score.countThreeWayCollisionCurrent++;
 							this.score.countThreeWayCollisionAllTime++;
+							this.score.combos.comboThreeWayCollision++;
 						}
 					} else if (wayCount === 2) {
 						// score a two-way collision
 						if (isJunkPile) {
 							this.score.countTwoWayJunkPileCurrent++;
 							this.score.countTwoWayJunkPileAllTime++;
+							this.score.combos.comboTwoWayJunkPile++;
 						} else {
 							this.score.countTwoWayCollisionCurrent++;
 							this.score.countTwoWayCollisionAllTime++;
+							this.score.combos.comboTwoWayCollision++;
 						}
 					} else if (wayCount === 1) {
 						// it must be a one-way into junk, score that
 						this.score.countJunkPileCurrent++;
 						this.score.countJunkPileAllTime++;
+						this.score.combos.comboSingleCount++;
 					} else {
 						console.log(`error: the wayCount was ${wayCount}`);
 					}
 				}
+
+				// TODO: Score combos!
+				this.score.processCombos();
 
 				// Only set as dead after all of the iterations and such.
 				for (let char of this.charactersToRedraw) {
@@ -119,7 +129,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 				}
 			}
 
-			this.score.update(this.charactersToRedraw);
+			//this.score.update(this.charactersToRedraw);
 
 			if (this.doctor.isDead) {
 				this.gameOver();
@@ -234,6 +244,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		let dalek4 = new Dalek();
 		let dalek5 = new Dalek();
 
+		// 1 - 2 - next to each other above player
 		dalek1.xpos = this.doctor.xpos + 0 * this.squareSize;
 		dalek1.ypos = this.doctor.ypos - 3 * this.squareSize;
 		this.charactersToRedraw.push(dalek1);
@@ -242,8 +253,9 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		dalek2.ypos = this.doctor.ypos - 3 * this.squareSize;
 		this.charactersToRedraw.push(dalek2);
 
+		// 3 - 5 - above the first two, one space apart
 		dalek3.xpos = this.doctor.xpos - 2 * this.squareSize;
-		dalek3.ypos = this.doctor.ypos - 4 * this.squareSize; 
+		dalek3.ypos = this.doctor.ypos - 4 * this.squareSize;
 		this.charactersToRedraw.push(dalek3);
 
 		dalek4.xpos = this.doctor.xpos + 0 * this.squareSize;

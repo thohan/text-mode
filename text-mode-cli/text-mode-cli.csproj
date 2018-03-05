@@ -125,8 +125,10 @@
     <TypeScriptCompile Include="src\app\daleks\dalek.component.spec.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.component.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\dalek.module.ts" />
     <TypeScriptCompile Include="src\app\daleks\doctor.model.ts" />
     <TypeScriptCompile Include="src\app\daleks\input.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\score.model.spec.ts" />
     <TypeScriptCompile Include="src\app\daleks\score.model.ts" />
     <TypeScriptCompile Include="src\app\shared\services\local-storage.service.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />

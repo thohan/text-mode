@@ -2,24 +2,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DalekComponent } from './daleks/dalek.component';
+import { DalekModule } from './daleks/dalek.module'
 
 @NgModule({
 	declarations: [
-		AppComponent,
-		DalekComponent
+		AppComponent
 	],
 	imports: [
 		BrowserModule,
-		AppRoutingModule
+		AppRoutingModule,
+		DalekModule.forRoot()
 	],
-	providers: [],
 	bootstrap: [
 		AppComponent
 	],
-	//schemas: [
-	//	CUSTOM_ELEMENTS_SCHEMA
-	//]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class AppModule {
