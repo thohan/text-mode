@@ -28,11 +28,15 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	@ViewChild('canvas') canvas: ElementRef;
 	squareSize = ConfigModel.squareSize;
 
+	constructor() {
+		// will be injecting the localStorage service, other services...
+	}
+
 	getRect(): ClientRect {
 		return this.canvas.nativeElement.getBoundingClientRect();
 	}
 
-	@HostListener('window:keydown') keyStroke() {
+	@HostListener('window:keyup') keyStroke() {
 		this.updateGameBoard(Input.Keyboard);
 	}
 
@@ -52,7 +56,6 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 			// Check for collisions/update isDead status/score/counts
 			// Does this belong in score.model? It is for scoring and counts, but it also modifies the bots.
-
 			for (let charA of this.charactersToRedraw) {
 				let wayCount = 0;
 				let isJunkPile = false;
@@ -91,11 +94,13 @@ export class DalekComponent implements OnInit, AfterViewInit {
 							this.score.countThreeWayJunkPileCurrent++;
 							this.score.countThreeWayJunkPileAllTime++;
 							this.score.combos.comboSingleCount++;
+							this.score.update(this.score.pointsThreeWayJunkPile);	// better way to update scores?
 						} else {
 							// score a three-way collision
 							this.score.countThreeWayCollisionCurrent++;
 							this.score.countThreeWayCollisionAllTime++;
 							this.score.combos.comboThreeWayCollision++;
+							this.score.update(this.score.pointsThreeWayCollision);
 						}
 					} else if (wayCount === 2) {
 						// score a two-way collision
@@ -103,23 +108,26 @@ export class DalekComponent implements OnInit, AfterViewInit {
 							this.score.countTwoWayJunkPileCurrent++;
 							this.score.countTwoWayJunkPileAllTime++;
 							this.score.combos.comboTwoWayJunkPile++;
+							this.score.update(this.score.pointsTwoWayJunkPile);
 						} else {
 							this.score.countTwoWayCollisionCurrent++;
 							this.score.countTwoWayCollisionAllTime++;
 							this.score.combos.comboTwoWayCollision++;
+							this.score.update(this.score.pointsTwoWayCollision);
 						}
 					} else if (wayCount === 1) {
 						// it must be a one-way into junk, score that
 						this.score.countJunkPileCurrent++;
 						this.score.countJunkPileAllTime++;
 						this.score.combos.comboSingleCount++;
+						this.score.update(this.score.pointsJunkPile);
 					} else {
 						console.log(`error: the wayCount was ${wayCount}`);
 					}
 				}
 
 				// TODO: Score combos!
-				this.score.processCombos();
+				//this.score.processCombos();	// I'm scoring these too many times, I think.
 
 				// Only set as dead after all of the iterations and such.
 				for (let char of this.charactersToRedraw) {
@@ -129,7 +137,8 @@ export class DalekComponent implements OnInit, AfterViewInit {
 				}
 			}
 
-			//this.score.update(this.charactersToRedraw);
+			// TODO: Run processCombos here instead, I think.
+			this.score.processCombos();
 
 			if (this.doctor.isDead) {
 				this.gameOver();

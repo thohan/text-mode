@@ -10,16 +10,16 @@
 <!-- Testing information -->
 <div style="width: 800px; margin: 0 auto;">
 	<p>
-		Score: {{score.runningScore | number: '4.0-0'}}
-		- one way junk: {{score.countJunkPileCurrent}}
-		- two way: {{score.countTwoWayCollisionCurrent}}
-		- two-way junk: {{score.countTwoWayJunkPileCurrent}}
-		- three way: {{score.countThreeWayCollisionCurrent}}
-		- three-way junk: {{score.countThreeWayJunkPileCurrent}}
+		Score: {{score.scoreCurrent | number: '4.0-0'}},
+		one way junk: {{score.countJunkPileCurrent}},
+		two way: {{score.countTwoWayCollisionCurrent}},
+		two-way junk: {{score.countTwoWayJunkPileCurrent}},
+		three way: {{score.countThreeWayCollisionCurrent}},
+		three-way junk: {{score.countThreeWayJunkPileCurrent}}
 	</p>
 	<p>
-		Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}
-		- Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}
+		Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}},
+		Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}
 	</p>
 	<!--<p>Arrow direction: {{doctor.arrow.direction | number: '3.0-0'}}</p>
 	<p>Arrow direction in degrees: {{doctor.arrow.directionInDegrees | number: '3.0-0'}}</p>-->

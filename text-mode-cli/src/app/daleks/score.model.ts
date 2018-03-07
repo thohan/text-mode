@@ -13,25 +13,31 @@ export class Combos {
 
 export class Score {
 	// event scores:
-	readonly JunkPile = 10;
-	readonly TwoWayJunkPile = 25;
-	readonly ThreeWayJunkPile = 40;
-	readonly TwoWay = 25;
-	readonly ThreeWay = 40;
-	readonly SonicScrewdriver = 10;
-	readonly RoundComplete = 50;	// Not sure about this one. Seems like I'd really want to reward finishing a round. Maybe 10 * the round, e.g. 30 for completing the third round.
+	readonly pointsJunkPile = 10;			// The most common occurrence.
+	readonly pointsTwoWayJunkPile = 25;		// In my unscientific sample, this was as common as a three-way collision. Somewhat uncommon, maybe one in ten or so.
+	readonly pointsThreeWayJunkPile = 50;	// This seems to be a very rare event!
+	readonly pointsTwoWayCollision = 20;	// Very common event, almost as common as a single junk pile.
+	readonly pointsThreeWayCollision = 35;	// Uncommon, about one in ten or so.
+	readonly pointsSonicScrewdriver = 10;	// Not implemented yet.
+	readonly pointsRoundComplete = 50;		// Not sure about this one. Seems like I'd really want to reward finishing a round. Maybe 10 * the round, e.g. 30 for completing the third round.
 
 	// score multipliers
 	// I have no idea what would be appropriate.
 	// Maybe use an arbitrary point value rather than a multiplier.
-	readonly TwoPlusOneCombox2 = 1.2;
-	readonly TwoPlusOneCombox3 = 1.5;
-	readonly ThreePlusOneCombox2 = 1.25;
-	readonly ThreePlusOneCombox3 = 1.6;
-	readonly ThreePlusTwoCombox2 = 1.3;
-	readonly ThreePlusTwoCombox3 = 1.7;
-	readonly ThreePlusTwoPlusOneCombox2 = 2;
-	readonly ThreePlusTwoPlusOneCombox3 = 3;
+	readonly pointsJunkPileCombox2 = 5;
+	readonly pointsJunkPileCombox3 = 10;
+	readonly pointsTwoWayJunkPileCombox2 = 10;
+	readonly pointsTwoWayJunkPileCombox3 = 20;
+	readonly pointsTwoWayCollisionCombox2 = 10;
+	readonly pointsTwoWayCollisionCombox3 = 20;
+	readonly pointsThreeWayJunkPileCombox2 = 20;
+	readonly pointsThreeWayJunkPileCombox3 = 40;
+	readonly pointsThreeWayCollisionCombox2 = 20;
+	readonly pointsThreeWayCollisionCombox3 = 40;
+	readonly pointsTwoPlusOneCombo = 15;
+	readonly pointsThreePlusOneCombo = 20;
+	readonly pointsThreePlusTwoCombo = 30;
+	readonly pointsThreePlusTwoPlusOneCombo = 50;
 
 	// total score:
 	scoreCurrent = 0;
@@ -103,10 +109,12 @@ export class Score {
 			case 2:
 				this.countJunkPilex2Current++;
 				this.countJunkPilex2AllTime++;
+				this.update(this.pointsJunkPileCombox2);
 				break;
 			case 3:
 				this.countJunkPilex3Current++;
 				this.countJunkPilex3AllTime++;
+				this.update(this.pointsJunkPileCombox3);
 				break;
 		}
 
@@ -114,10 +122,12 @@ export class Score {
 			case 2:
 				this.countTwoWayJunkPilex2Current++;
 				this.countTwoWayJunkPilex2AllTime++;
+				this.update(this.pointsTwoWayJunkPileCombox2);
 				break;
 			case 3:
 				this.countTwoWayJunkPilex3Current++;
 				this.countTwoWayJunkPilex3AllTime++;
+				this.update(this.pointsTwoWayJunkPileCombox3);
 				break;
 		}
 
@@ -125,10 +135,12 @@ export class Score {
 			case 2:
 				this.countTwoWayCollisionx2Current++;
 				this.countTwoWayCollisionx2AllTime++;
+				this.update(this.pointsTwoWayCollisionCombox2);
 				break;
 			case 3:
 				this.countTwoWayCollisionx3Current++;
 				this.countTwoWayCollisionx3AllTime++;
+				this.update(this.pointsTwoWayCollisionCombox3);
 				break;
 		}
 
@@ -136,10 +148,12 @@ export class Score {
 			case 2:
 				this.countThreeWayJunkPilex2Current++;
 				this.countThreeWayJunkPilex2AllTime++;
+				this.update(this.pointsThreeWayJunkPileCombox2);
 				break;
 			case 3:
 				this.countThreeWayJunkPilex3Current++;
 				this.countThreeWayJunkPilex3AllTime++;
+				this.update(this.pointsThreeWayJunkPileCombox3);
 				break;
 		}
 
@@ -147,10 +161,12 @@ export class Score {
 			case 2:
 				this.countThreeWayCollisionx2Current++;
 				this.countThreeWayCollisionx2AllTime++;
+				this.update(this.pointsThreeWayCollisionCombox2);
 				break;
 			case 3:
 				this.countThreeWayCollisionx3Current++;
 				this.countThreeWayCollisionx3AllTime++;
+				this.update(this.pointsThreeWayCollisionCombox3);
 				break;
 		}
 
@@ -161,45 +177,32 @@ export class Score {
 		) {
 			this.countThreePlusTwoPlusOneComboCurrent++;
 			this.countThreePlusTwoPlusOneComboAllTime++;
+			this.update(this.pointsThreePlusTwoPlusOneCombo);
 		} else if ((this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
 			&& (this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
 		) {
 			this.countThreePlusTwoComboCurrent++;
 			this.countThreePlusTwoComboAllTime++;
+			this.update(this.pointsThreePlusTwoCombo);
 		} else if ((this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
 			&& this.combos.comboSingleCount > 0
 		) {
 			this.countThreePlusOneComboCurrent++;
 			this.countThreePlusOneComboAllTime++;
+			this.update(this.pointsThreePlusOneCombo);
 		} else if ((this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
 			&& this.combos.comboSingleCount
 		) {
 			this.countTwoPlusOneComboCurrent++;
 			this.countTwoPlusOneComboAllTime++;
+			this.update(this.pointsTwoPlusOneCombo);
 		}
 	}
 
-	update(chars: ICharacter[]): void {
-		for (let charA of chars) {
-			for (let charB of chars) {
-				// if not a doctor, do the rest of the checks
-				if (
-					!(charA instanceof Doctor)
-					&& !(charB instanceof Doctor)
-					&& charA !== charB
-				) {
-					// Types of dalek destruction:
-					// One dalek running into a pile
-					// Two daleks running into a pile
-					// Three daleks running into a pile
-					// Two daleks colliding
-					// Three daleks colliding
-					// A sonic screwdriver at some point in the future, I suppose
-
-					// if hasCountedScore = true and isDead = true, the dalek is a pile, otherwise, a fresh kill
-
-				}
-			}
-		}
+	update(points: number): void {
+		this.scoreCurrent += points;
+		this.scoreAllTime += points;
 	}
+
+	// perhaps several score update methods in addition to the one above...
 }
