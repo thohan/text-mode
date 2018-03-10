@@ -197,6 +197,16 @@ export class Score {
 			this.countTwoPlusOneComboAllTime++;
 			this.update(this.pointsTwoPlusOneCombo);
 		}
+
+		this.clearCombos();
+	}
+
+	clearCombos() {
+		this.combos.comboSingleCount = 0;
+		this.combos.comboThreeWayCollision = 0;
+		this.combos.comboThreeWayJunkPile = 0;
+		this.combos.comboTwoWayCollision = 0;
+		this.combos.comboTwoWayJunkPile = 0;
 	}
 
 	update(points: number): void {

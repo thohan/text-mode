@@ -93,7 +93,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 							// score a three-way junkpile collision
 							this.score.countThreeWayJunkPileCurrent++;
 							this.score.countThreeWayJunkPileAllTime++;
-							this.score.combos.comboSingleCount++;
+							this.score.combos.comboThreeWayJunkPile++;
 							this.score.update(this.score.pointsThreeWayJunkPile);	// better way to update scores?
 						} else {
 							// score a three-way collision
