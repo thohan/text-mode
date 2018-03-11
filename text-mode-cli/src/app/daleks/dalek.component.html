@@ -1,14 +1,15 @@
-<div style="width: 800px; margin: 0 auto;">
+<div style="height: 10px;"></div>
+<div style="width: 500px; margin: 0 auto;">
 	<canvas #canvas
 			class="clear"
 			style="border:1px solid;"
-			width="800"
+			width="500"
 			height="500"
 			(mousemove)='onCursorMove($event)'
 			(click)='onClick($event)'></canvas><!--change back to mousemove after testing -->
 </div>
 <!-- Testing information -->
-<div style="width: 800px; margin: 0 auto;">
+<div style="width: 500px; margin: 0 auto;">
 	<p>
 		Score: {{score.scoreCurrent | number: '4.0-0'}},
 		one way junk: {{score.countJunkPileCurrent}},
