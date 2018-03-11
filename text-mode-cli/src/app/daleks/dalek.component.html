@@ -1,25 +1,26 @@
-<div style="width: 800px; margin: 0 auto;">
+<div style="height: 10px;"></div>
+<div style="width: 500px; margin: 0 auto;">
 	<canvas #canvas
 			class="clear"
 			style="border:1px solid;"
-			width="800"
+			width="500"
 			height="500"
 			(mousemove)='onCursorMove($event)'
 			(click)='onClick($event)'></canvas><!--change back to mousemove after testing -->
 </div>
 <!-- Testing information -->
-<div style="width: 800px; margin: 0 auto;">
+<div style="width: 500px; margin: 0 auto;">
 	<p>
-		Score: {{score.runningScore | number: '4.0-0'}}
-		- one way junk: {{score.countJunkPileCurrent}}
-		- two way: {{score.countTwoWayCollisionCurrent}}
-		- two-way junk: {{score.countTwoWayJunkPileCurrent}}
-		- three way: {{score.countThreeWayCollisionCurrent}}
-		- three-way junk: {{score.countThreeWayJunkPileCurrent}}
+		Score: {{score.scoreCurrent | number: '4.0-0'}},
+		one way junk: {{score.countJunkPileCurrent}},
+		two way: {{score.countTwoWayCollisionCurrent}},
+		two-way junk: {{score.countTwoWayJunkPileCurrent}},
+		three way: {{score.countThreeWayCollisionCurrent}},
+		three-way junk: {{score.countThreeWayJunkPileCurrent}}
 	</p>
 	<p>
-		Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}}
-		- Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}
+		Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}},
+		Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}
 	</p>
 	<!--<p>Arrow direction: {{doctor.arrow.direction | number: '3.0-0'}}</p>
 	<p>Arrow direction in degrees: {{doctor.arrow.directionInDegrees | number: '3.0-0'}}</p>-->

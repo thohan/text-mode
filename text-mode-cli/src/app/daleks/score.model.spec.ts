@@ -15,7 +15,7 @@ describe('ScoreModel.Score', () => {
 			],
 		}).compileComponents();
 
-		
+		 
 	}));
 	it('to have a Combos object defined upon construction', (() => {
 		score = new ScoreModel.Score();

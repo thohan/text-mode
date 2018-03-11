@@ -11,7 +11,9 @@ import Cursor = InputModel.Cursor;
 import Input = InputModel.Input;
 import ScoreModel = require('./score.model');
 import Score = ScoreModel.Score;
+import Events = ScoreModel.Events;
 import ConfigModel = require('./config.model');
+import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @Component({
 	selector: 'app-daleks',
@@ -28,11 +30,17 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	@ViewChild('canvas') canvas: ElementRef;
 	squareSize = ConfigModel.squareSize;
 
+	constructor(
+		private localStorageService: LocalStorageService
+	) {
+		// will be injecting the localStorage service, other services...
+	}
+
 	getRect(): ClientRect {
 		return this.canvas.nativeElement.getBoundingClientRect();
 	}
 
-	@HostListener('window:keydown') keyStroke() {
+	@HostListener('window:keyup') keyStroke() {
 		this.updateGameBoard(Input.Keyboard);
 	}
 
@@ -52,7 +60,6 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 			// Check for collisions/update isDead status/score/counts
 			// Does this belong in score.model? It is for scoring and counts, but it also modifies the bots.
-
 			for (let charA of this.charactersToRedraw) {
 				let wayCount = 0;
 				let isJunkPile = false;
@@ -85,43 +92,25 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 				if (collisionOccurred) {
 					if (wayCount === 3) {
-						// score a three-way collision
 						if (isJunkPile) {
-							// score a three-way junkpile collision
-							this.score.countThreeWayJunkPileCurrent++;
-							this.score.countThreeWayJunkPileAllTime++;
-							this.score.combos.comboSingleCount++;
+							this.score.update(Events.threeWayJunkPile)
 						} else {
-							// score a three-way collision
-							this.score.countThreeWayCollisionCurrent++;
-							this.score.countThreeWayCollisionAllTime++;
-							this.score.combos.comboThreeWayCollision++;
+							this.score.update(Events.threeWayCollision);
 						}
 					} else if (wayCount === 2) {
-						// score a two-way collision
 						if (isJunkPile) {
-							this.score.countTwoWayJunkPileCurrent++;
-							this.score.countTwoWayJunkPileAllTime++;
-							this.score.combos.comboTwoWayJunkPile++;
+							this.score.update(Events.twoWayJunkPile);
 						} else {
-							this.score.countTwoWayCollisionCurrent++;
-							this.score.countTwoWayCollisionAllTime++;
-							this.score.combos.comboTwoWayCollision++;
+							this.score.update(Events.twoWayCollision);
 						}
 					} else if (wayCount === 1) {
-						// it must be a one-way into junk, score that
-						this.score.countJunkPileCurrent++;
-						this.score.countJunkPileAllTime++;
-						this.score.combos.comboSingleCount++;
+						this.score.update(Events.junkPile);
 					} else {
 						console.log(`error: the wayCount was ${wayCount}`);
 					}
 				}
 
-				// TODO: Score combos!
-				this.score.processCombos();
-
-				// Only set as dead after all of the iterations and such.
+				// Only set as dead after all of the iterations.
 				for (let char of this.charactersToRedraw) {
 					if (char.markAsDead) {
 						char.isDead = true;
@@ -129,11 +118,12 @@ export class DalekComponent implements OnInit, AfterViewInit {
 				}
 			}
 
-			//this.score.update(this.charactersToRedraw);
+			this.score.processCombos();
 
 			if (this.doctor.isDead) {
 				this.gameOver();
 			} else if (this.roundIsComplete()) {
+				this.score.update(Events.roundComplete)
 				this.startNextRound();
 			}
 
@@ -171,7 +161,20 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	gameOver(): void {
+		this.score.updateSavedScore();
 
+
+		// Splice current score to high scores if it is in the top ten.
+		// Push out bottom score if current score in top ten.
+		// save high scores to localStorage.
+
+
+		// Save score to localStorage.
+		this.localStorageService.addLocal('savedScore', this.score.savedScore);
+	}
+
+	startNewGame(): void {
+		// reset all the "current" counters/scores to zero
 	}
 
 	updateCursorPosition(evt) {
@@ -287,8 +290,8 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 		this.cursor = new Cursor();
 		this.score = new Score();
-		//this.startNextRound();	// Comment out for testing! I want to set up some scenarios with some specific placement of some bots
-		this.startTestRound();
+		//this.startNextRound();	// Commented out for testing. TODO: Un-comment!
+		this.startTestRound();		// My test arena. Bots will be pre-placed so as to test various scenarios.
 
 		setTimeout(() => {
 			this.drawCharacters();

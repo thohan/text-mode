@@ -1,6 +1,7 @@
 ﻿import { NgModule, ModuleWithProviders } from '@angular/core';
 import { DalekComponent } from './dalek.component';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @NgModule({
 	imports: [
@@ -8,6 +9,9 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 	],
 	declarations: [
 		DalekComponent
+	],
+	providers: [
+		LocalStorageService
 	],
 	exports: [
 		DalekComponent
