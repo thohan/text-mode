@@ -6,6 +6,8 @@ import Doctor = DoctorModel.Doctor;
 import Dalek = DalekModel.Dalek;
 import CharacterModel = require('./character.model');
 import ICharacter = CharacterModel.ICharacter;
+import StartScreenModel = require('./start-screen.model');
+import StartScreen = StartScreenModel.StartScreen;
 import InputModel = require('./input.model');
 import Cursor = InputModel.Cursor;
 import Input = InputModel.Input;
@@ -24,11 +26,14 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	cursor: Cursor;
 	ctx: CanvasRenderingContext2D;
 	doctor: Doctor;
+	// not sure how best to model various buttons. Let's start with this:
+	startScreen: StartScreen;
 	charactersToRedraw: ICharacter[] = [];
 	round = 0;
 	score: Score;
 	@ViewChild('canvas') canvas: ElementRef;
 	squareSize = ConfigModel.squareSize;
+	isGameRunning = false;
 
 	constructor(
 		private localStorageService: LocalStorageService
@@ -41,11 +46,16 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('window:keyup') keyStroke() {
-		this.updateGameBoard(Input.Keyboard);
+		if (this.isGameRunning) {
+			this.updateGameBoard(Input.Keyboard);
+		}
 	}
 
 	onClick(event): void {
-		this.updateGameBoard(Input.Mouse);
+		// TODO: Possibly replace isGameRunning with an enum that represents several different game states, i.e., running, start, options, hiscores, etc.
+		if (this.isGameRunning) {
+			this.updateGameBoard(Input.Mouse);
+		}
 	}
 
 	updateGameBoard(inputType: Input): void {
@@ -163,7 +173,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	gameOver(): void {
 		this.score.updateSavedScore();
 
-
+		// show a game over screen with buttons and whatnot.
 		// Splice current score to high scores if it is in the top ten.
 		// Push out bottom score if current score in top ten.
 		// save high scores to localStorage.
@@ -171,10 +181,8 @@ export class DalekComponent implements OnInit, AfterViewInit {
 
 		// Save score to localStorage.
 		this.localStorageService.addLocal('savedScore', this.score.savedScore);
-	}
 
-	startNewGame(): void {
-		// reset all the "current" counters/scores to zero
+		// TODO: Reset all the current-game points to zero as there is no current game!
 	}
 
 	updateCursorPosition(evt) {
@@ -184,8 +192,10 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	onCursorMove(event) {
-		this.updateCursorPosition(event);
-		this.drawArrow();
+		if (this.isGameRunning) {
+			this.updateCursorPosition(event);
+			this.drawArrow();
+		}
 	}
 
 	drawArrow(force: boolean = false) {
@@ -198,6 +208,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 				let hoverArrowImage = <HTMLImageElement>document.getElementById(arrow.name);
 
 				if (hoverArrowImage) {
+					// TODO: Move drawing to arrow, passing context!
 					this.ctx.drawImage(hoverArrowImage,
 						this.doctor.xpos + arrow.xpos,
 						this.doctor.ypos + arrow.ypos,
@@ -222,6 +233,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 			}
 
 			if (char.image) {
+				// TODO: move drawing to character, passing context.
 				this.ctx.drawImage(char.image, char.xpos, char.ypos, char.width, char.height);
 			}
 		});
@@ -286,16 +298,31 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		// draw other game elements
 	}
 
+	loadStartScreen() {
+		setTimeout(() => {
+			this.startScreen.drawImages(this.ctx);
+		});
+
+		// start button click behavior!
+	}
+
+	startGame() {
+		//this.startNextRound();	// Commented out for testing. TODO: Un-comment!
+		this.startTestRound();		// My test arena. Bots will be pre-placed so as to test various scenarios.
+
+		// Timeout may not be needed since this isn't part of ngOnInit()
+		setTimeout(() => {
+			this.drawCharacters();
+		}, 200);
+	}
+
 	ngOnInit() {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 		this.cursor = new Cursor();
 		this.score = new Score();
-		//this.startNextRound();	// Commented out for testing. TODO: Un-comment!
-		this.startTestRound();		// My test arena. Bots will be pre-placed so as to test various scenarios.
-
-		setTimeout(() => {
-			this.drawCharacters();
-		}, 200);
+		this.startScreen = new StartScreen();
+		
+		this.loadStartScreen();
 	};
 
 	ngAfterViewInit() {
