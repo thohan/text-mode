@@ -2,6 +2,7 @@ import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { DalekComponent } from './dalek.component';
+
 describe('DalekComponent', () => {
 	// https://stackoverflow.com/a/43950991/13578 had the info I needed (I think...)
 	let component: DalekComponent;

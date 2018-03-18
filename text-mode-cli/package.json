@@ -12,7 +12,7 @@
 		"tsc": "tsc",
 		"typings": "typings",
 		"build": "ng build --prod",
-		"build-debug": "ng build --debug --watch",
+		"build-debug": "ng build --watch",
 		"lint": "ng lint",
 		"e2e": "ng e2e",
 		"copy": "xcopy \"dist\" \"..\\text-mode.web\\src\\app\" /i /s /r /y /c --watch",

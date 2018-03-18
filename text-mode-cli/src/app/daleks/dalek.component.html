@@ -19,8 +19,8 @@
 		three-way junk: {{score.countThreeWayJunkPileCurrent}}
 	</p>
 	<p>
-		Mouse position: {{cursor.xpos | number: '3.0-0'}},{{cursor.ypos | number: '3.0-0'}},
-		Dr. position: {{doctor.xpos | number: '3.0-0'}},{{doctor.ypos | number: '3.0-0'}}
+		Mouse position: {{cursor?.xpos | number: '3.0-0'}},{{cursor?.ypos | number: '3.0-0'}},
+		Dr. position: {{doctor?.xpos | number: '3.0-0'}},{{doctor?.ypos | number: '3.0-0'}}
 	</p>
 	<!--<p>Arrow direction: {{doctor.arrow.direction | number: '3.0-0'}}</p>
 	<p>Arrow direction in degrees: {{doctor.arrow.directionInDegrees | number: '3.0-0'}}</p>-->
@@ -40,5 +40,7 @@
 	<img src="./src/app/assets/arrowse.jpg" id="arrowse" />
 	<img src="./src/app/assets/dalek.jpg" id="dalek" />
 	<img src="./src/app/assets/junkheap.jpg" id="junkheap" />
+	<img src="./src/app/assets/title_marquee.jpg" id="title-marquee" />
+	<img src="./src/app/assets/start_button.jpg" id="start-button" />
 	<!-- TODO: Make the paths align! -->
 </div>

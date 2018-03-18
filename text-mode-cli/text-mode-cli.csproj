@@ -86,6 +86,8 @@
     <Content Include="src\assets\dalek.jpg" />
     <Content Include="src\assets\doctor.jpg" />
     <Content Include="src\assets\junkheap.jpg" />
+    <Content Include="src\assets\start_button.jpg" />
+    <Content Include="src\assets\title_marquee.jpg" />
     <Content Include="src\tsconfig.app.json" />
     <Content Include="src\tsconfig.spec.json" />
     <Content Include="README.md" />
@@ -120,6 +122,7 @@
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\daleks\arrow.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\basic-image.model.ts" />
     <TypeScriptCompile Include="src\app\daleks\character.model.ts" />
     <TypeScriptCompile Include="src\app\daleks\config.model.ts" />
     <TypeScriptCompile Include="src\app\daleks\dalek.component.spec.ts" />
@@ -130,6 +133,7 @@
     <TypeScriptCompile Include="src\app\daleks\input.model.ts" />
     <TypeScriptCompile Include="src\app\daleks\score.model.spec.ts" />
     <TypeScriptCompile Include="src\app\daleks\score.model.ts" />
+    <TypeScriptCompile Include="src\app\daleks\start-screen.model.ts" />
     <TypeScriptCompile Include="src\app\shared\services\local-storage.service.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />

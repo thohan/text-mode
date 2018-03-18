@@ -4,56 +4,12 @@ import DoctorModel = require('./doctor.model');
 import Doctor = DoctorModel.Doctor;
 
 export class Combos {
-	comboSingle = 0;
+	comboJunk = 0;
 	comboTwoWayCollision = 0;
 	comboTwoWayJunkPile = 0;
 	comboThreeWayCollision = 0;
 	comboThreeWayJunkPile = 0;
 	comboSonicScrewdriver = 0;
-}
-
-export class HighScore {
-	name: string;
-	score: number;
-}
-
-// A lightweight container for the information I want to store.
-export class SavedScore {
-	// Put the all-time counters here. This will be necessary for achievements and such.
-	countJunkPile = 0;
-	countTwoWayJunkPile = 0;
-	countTwoWayCollision = 0;
-	countThreeWayJunkPile = 0;
-	countThreeWayCollision = 0;
-	countJunkPileCombox2 = 0;
-	countJunkPileCombox3 = 0;
-	countTwoWayJunkPileCombox2 = 0;
-	countTwoWayJunkPileCombox3 = 0;
-	countTwoWayCollisionCombox2 = 0;
-	countTwoWayCollisionCombox3 = 0;
-	countThreeWayJunkPileCombox2 = 0;
-	countThreeWayJunkPileCombox3 = 0;
-	countThreeWayCollisionCombox2 = 0;
-	countThreeWayCollisionCombox3 = 0;
-	countThreePlusTwoPlusOneCombo = 0;
-	countThreePlusTwoCombo = 0;
-	countThreePlusOneCombo = 0;
-	countTwoPlusOneCombo = 0;
-	countSonicScrewDriver = 0;
-	countRoundsComplete = 0;
-
-	countRoundFiveComplete = 0;
-	countRoundTenComplete = 0;
-	countRoundFifteenComplete = 0;
-	countRoundTwentyComplete = 0;
-	countRoundTwentyFiveComplete = 0;
-	countRoundThirtyCompleteAllTime = 0;
-
-	highScores: HighScore[];
-
-	constructor() {
-		this.highScores = new Array<HighScore>();
-	}
 }
 
 export enum Events {
@@ -80,75 +36,104 @@ export enum Events {
 	roundComplete
 }
 
-export class Score {
-	// event scores:
-	readonly pointsJunkPile = 10;			// The most common occurrence.
-	readonly pointsTwoWayJunkPile = 25;		// In my unscientific sample, this was as common as a three-way collision. Somewhat uncommon, maybe one in ten or so.
-	readonly pointsThreeWayJunkPile = 40;	// This seems to be a very rare event!
-	readonly pointsTwoWayCollision = 25;	// Very common event, almost as common as a single junk pile.
-	readonly pointsThreeWayCollision = 40;	// Uncommon, about one in ten or so.
-	readonly pointsSonicScrewdriver = 10;	// Not implemented yet.
-	readonly pointsRoundComplete = 10;		// Not sure about this one. Seems like I'd really want to reward finishing a round. Maybe 10 * the round, e.g. 30 for completing the third round.
+export class Points {
+	readonly junkPile = 10;			// The most common occurrence.
+	readonly twoWayJunkPile = 25;		// In my unscientific sample, this was as common as a three-way collision. Somewhat uncommon, maybe one in ten or so.
+	readonly threeWayJunkPile = 40;	// This seems to be a very rare event!
+	readonly twoWayCollision = 25;	// Very common event, almost as common as a single junk pile.
+	readonly threeWayCollision = 40;	// Uncommon, about one in ten or so.
+	readonly sonicScrewdriver = 10;	// Not implemented yet.
+	readonly roundComplete = 10;		// Not sure about this one. Seems like I'd really want to reward finishing a round. Maybe 10 * the round, e.g. 30 for completing the third round.
 
 	// score multipliers
 	// I have no idea what would be appropriate.
 	// Maybe use an arbitrary point value rather than a multiplier.
-	readonly pointsJunkPileCombox2 = 5;
-	readonly pointsJunkPileCombox3 = 10;
-	readonly pointsTwoWayJunkPileCombox2 = 10;
-	readonly pointsTwoWayJunkPileCombox3 = 20;
-	readonly pointsTwoWayCollisionCombox2 = 10;
-	readonly pointsTwoWayCollisionCombox3 = 20;
-	readonly pointsThreeWayJunkPileCombox2 = 20;
-	readonly pointsThreeWayJunkPileCombox3 = 40;
-	readonly pointsThreeWayCollisionCombox2 = 20;
-	readonly pointsThreeWayCollisionCombox3 = 40;
-	readonly pointsTwoPlusOneCombo = 15;
-	readonly pointsThreePlusOneCombo = 20;
-	readonly pointsThreePlusTwoCombo = 30;
-	readonly pointsThreePlusTwoPlusOneCombo = 50;
+	readonly junkPileCombox2 = 5;
+	readonly junkPileCombox3 = 10;
+	readonly twoWayJunkPileCombox2 = 10;
+	readonly twoWayJunkPileCombox3 = 20;
+	readonly twoWayCollisionCombox2 = 10;
+	readonly twoWayCollisionCombox3 = 20;
+	readonly threeWayJunkPileCombox2 = 20;
+	readonly threeWayJunkPileCombox3 = 40;
+	readonly threeWayCollisionCombox2 = 20;
+	readonly threeWayCollisionCombox3 = 40;
+	readonly twoPlusOneCombo = 15;
+	readonly threePlusOneCombo = 20;
+	readonly threePlusTwoCombo = 30;
+	readonly threePlusTwoPlusOneCombo = 50;
+}
 
+export class Counts {
+	junkPile = 0;
+	twoWayJunkPile = 0;
+	threeWayJunkPile = 0;
+	twoWayCollision = 0;
+	threeWayCollision = 0;
+	sonicScrewDriver = 0;
+	roundComplete = 0;
+	// combo counters:
+	junkPileCombox2 = 0;
+	junkPileCombox3 = 0;
+	// possibly go x4, x5, x6, etc.
+	twoWayJunkPileCombox2 = 0;
+	twoWayJunkPileCombox3 = 0;
+	twoWayCollisionCombox2 = 0;
+	twoWayCollisionCombox3 = 0;
+	// maybe go x4, x5, etc.
+	threeWayJunkPileCombox2 = 0;
+	threeWayJunkPileCombox3 = 0;
+	threeWayCollisionCombox2 = 0;
+	threeWayCollisionCombox3 = 0;
+	// maybe go x4, x5, etc.
+	twoPlusOneCombo = 0;
+	threePlusOneCombo = 0;
+	threePlusTwoCombo = 0;
+	threePlusTwoPlusOneCombo = 0;
+
+	roundFiveComplete = 0;
+	roundTenComplete = 0;
+	roundFifteenComplete = 0;
+	roundTwentyComplete = 0;
+	roundTwentyFiveComplete = 0;
+	roundThirtyCompleteAllTime = 0;
+}
+
+export class HighScore {
+	name: string;
+	score: number;
+}
+
+// A lightweight container for the information I want to store.
+export class SavedScore {
+	counts: Counts;
+	highScores: HighScore[];
+
+	constructor() {
+		this.counts = new Counts();
+		this.highScores = new Array<HighScore>();
+	}
+}
+
+export class Score {
 	// total score:
 	scoreCurrent = 0;
 
-	// event counters:
-	countJunkPile = 0;
-	countTwoWayJunkPile = 0;
-	countThreeWayJunkPile = 0;
-	countTwoWayCollision = 0;
-	countThreeWayCollision = 0;
-	countSonicScrewDriver = 0;
-	countRoundsComplete = 0;
-	// combo counters:
-	countJunkPileCombox2 = 0;
-	countJunkPileCombox3 = 0;
-	// possibly go x4, x5, x6, etc.
-	countTwoWayJunkPileCombox2 = 0;
-	countTwoWayJunkPileCombox3 = 0;
-	countTwoWayCollisionCombox2 = 0;
-	countTwoWayCollisionCombox3 = 0;
-	// maybe go x4, x5, etc.
-	countThreeWayJunkPileCombox2 = 0;
-	countThreeWayJunkPileCombox3 = 0;
-	countThreeWayCollisionCombox2 = 0;
-	countThreeWayCollisionCombox3 = 0;
-	// maybe go x4, x5, etc.
-	countTwoPlusOneCombo = 0;
-	countThreePlusOneCombo = 0;
-	countThreePlusTwoCombo = 0;
-	countThreePlusTwoPlusOneCombo = 0;
-
+	points: Points;
+	counts: Counts;
 	combos: Combos;
 	savedScore: SavedScore;
 
 	constructor() {
 		this.scoreCurrent = 0;
+		this.points = new Points();
+		this.counts = new Counts();
 		this.combos = new Combos();
 		this.savedScore = new SavedScore();
 	}
 
 	processCombos() {
-		switch (this.combos.comboSingle) {
+		switch (this.combos.comboJunk) {
 			case 2:
 				this.update(Events.junkPileCombox2);
 				break;
@@ -196,7 +181,7 @@ export class Score {
 		}
 
 		// Now for the combo combos. I'm not distinguishing between junkpiles and non-junkpile collisions for these
-		if (this.combos.comboSingle > 0
+		if (this.combos.comboJunk > 0
 			&& (this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
 			&& (this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
 		) {
@@ -206,20 +191,20 @@ export class Score {
 		) {
 			this.update(Events.threePlusTwoCombo);
 		} else if ((this.combos.comboThreeWayJunkPile > 0 || this.combos.comboThreeWayCollision)
-			&& this.combos.comboSingle > 0
+			&& this.combos.comboJunk > 0
 		) {
 			this.update(Events.threePlusOneCombo);
 		} else if ((this.combos.comboTwoWayJunkPile > 0 || this.combos.comboTwoWayCollision)
-			&& this.combos.comboSingle
+			&& this.combos.comboJunk
 		) {
-			this.update(this.pointsTwoPlusOneCombo);
+			this.update(Events.twoPlusOneCombo);
 		}
 
 		this.clearCombos();
 	}
 
 	clearCombos() {
-		this.combos.comboSingle = 0;
+		this.combos.comboJunk = 0;
 		this.combos.comboThreeWayCollision = 0;
 		this.combos.comboThreeWayJunkPile = 0;
 		this.combos.comboTwoWayCollision = 0;
@@ -230,99 +215,96 @@ export class Score {
 	update(event: Events, round = 0): void {
 		switch (event) {
 			case Events.junkPile:
-				this.countJunkPile++;
-				this.combos.comboSingle++;
-				this.updatePoints(this.pointsJunkPile);
+				this.counts.junkPile++;
+				this.combos.comboJunk++;
+				this.updatePoints(this.points.junkPile);
 				break;
 			case Events.twoWayJunkPile:
-				this.countTwoWayJunkPile++;
+				this.counts.twoWayJunkPile++;
 				this.combos.comboTwoWayJunkPile++;
-				this.updatePoints(this.pointsTwoWayJunkPile);
+				this.updatePoints(this.points.twoWayJunkPile);
 				break;
 			case Events.twoWayCollision:
-				this.countTwoWayCollision++;
-				this.savedScore.countTwoWayCollision++;
+				this.counts.twoWayCollision++;
 				this.combos.comboTwoWayCollision++;
-				this.updatePoints(this.pointsTwoWayCollision);
+				this.updatePoints(this.points.twoWayCollision);
 				break;
 			case Events.threeWayJunkPile:
-				this.countThreeWayJunkPile++;
-				this.savedScore.countThreeWayJunkPile++;
+				this.counts.threeWayJunkPile++;
 				this.combos.comboThreeWayJunkPile++;
-				this.updatePoints(this.pointsThreeWayJunkPile);
+				this.updatePoints(this.points.threeWayJunkPile);
 				break;
 			case Events.threeWayCollision:
-				this.countThreeWayCollision++;
-				this.savedScore.countThreeWayCollision++;
+				this.counts.threeWayCollision++;
 				this.combos.comboThreeWayCollision++;
-				this.updatePoints(this.pointsThreeWayCollision);
+				this.updatePoints(this.points.threeWayCollision);
 				break;
 			case Events.junkPileCombox2:
-				this.countJunkPileCombox2++;
-				this.updatePoints(this.pointsJunkPileCombox2);
+				this.counts.junkPileCombox2++;
+				this.updatePoints(this.points.junkPileCombox2);
 				break;
 			case Events.junkPileCombox3:
-				this.countJunkPileCombox3++;
-				this.updatePoints(this.pointsJunkPileCombox3);
+				this.counts.junkPileCombox3++;
+				this.updatePoints(this.points.junkPileCombox3);
 				break;
 			case Events.twoWayJunkPileCombox2:
-				this.countTwoWayJunkPileCombox2++;
-				this.updatePoints(this.pointsTwoWayJunkPileCombox2);
+				this.counts.twoWayJunkPileCombox2++;
+				this.updatePoints(this.points.twoWayJunkPileCombox2);
 				break;
 			case Events.twoWayJunkPileCombox3:
-				this.countTwoWayJunkPileCombox3++;
-				this.updatePoints(this.pointsTwoWayJunkPileCombox3);
+				this.counts.twoWayJunkPileCombox3++;
+				this.updatePoints(this.points.twoWayJunkPileCombox3);
 				break;
 			case Events.twoWayCollisionCombox2:
-				this.countTwoWayCollisionCombox2++;
-				this.updatePoints(this.pointsTwoWayCollisionCombox2);
+				this.counts.twoWayCollisionCombox2++;
+				this.updatePoints(this.points.twoWayCollisionCombox2);
 				break;
 			case Events.twoWayCollisionCombox3:
-				this.countTwoWayCollisionCombox3++;
-				this.updatePoints(this.pointsTwoWayCollisionCombox3);
+				this.counts.twoWayCollisionCombox3++;
+				this.updatePoints(this.points.twoWayCollisionCombox3);
 				break;
 			case Events.threeWayJunkPileCombox2:
-				this.countThreeWayJunkPileCombox2++;
-				this.updatePoints(this.pointsThreeWayJunkPileCombox2);
+				this.counts.threeWayJunkPileCombox2++;
+				this.updatePoints(this.points.threeWayJunkPileCombox2);
 				break;
 			case Events.threeWayJunkPileCombox3:
-				this.countThreeWayJunkPileCombox3++;
-				this.updatePoints(this.pointsThreeWayJunkPileCombox3);
+				this.counts.threeWayJunkPileCombox3++;
+				this.updatePoints(this.points.threeWayJunkPileCombox3);
 				break;
 			case Events.threeWayCollisionCombox2:
-				this.countThreeWayCollisionCombox2++;
-				this.updatePoints(this.pointsThreeWayCollisionCombox2);
+				this.counts.threeWayCollisionCombox2++;
+				this.updatePoints(this.points.threeWayCollisionCombox2);
 				break;
 			case Events.threeWayCollisionCombox3:
-				this.countThreeWayCollisionCombox3++;
-				this.updatePoints(this.pointsThreeWayCollisionCombox3);
+				this.counts.threeWayCollisionCombox3++;
+				this.updatePoints(this.points.threeWayCollisionCombox3);
 				break;
 			case Events.threePlusTwoPlusOneCombo:
-				this.countThreePlusTwoPlusOneCombo++;
-				this.updatePoints(this.pointsThreePlusTwoPlusOneCombo);
+				this.counts.threePlusTwoPlusOneCombo++;
+				this.updatePoints(this.points.threePlusTwoPlusOneCombo);
 				break;
 			case Events.threePlusTwoCombo:
-				this.countThreePlusTwoCombo++;
-				this.updatePoints(this.pointsThreePlusTwoCombo);
+				this.counts.threePlusTwoCombo++;
+				this.updatePoints(this.points.threePlusTwoCombo);
 				break;
 			case Events.threePlusOneCombo:
-				this.countThreePlusOneCombo++;
-				this.updatePoints(this.pointsThreePlusOneCombo);
+				this.counts.threePlusOneCombo++;
+				this.updatePoints(this.points.threePlusOneCombo);
 				break;
 			case Events.twoPlusOneCombo:
-				this.countTwoPlusOneCombo++;
-				this.updatePoints(this.pointsTwoPlusOneCombo);
+				this.counts.twoPlusOneCombo++;
+				this.updatePoints(this.points.twoPlusOneCombo);
 				break;
 			case Events.sonicScrewdriver:
-				this.countSonicScrewDriver++;
+				this.counts.sonicScrewDriver++;
 				this.combos.comboSonicScrewdriver++;
-				this.updatePoints(this.pointsSonicScrewdriver);
+				this.updatePoints(this.points.sonicScrewdriver);
 				break;
 			case Events.roundComplete:
 				// Probably need to do some special logic in here if I'm going to support counts of 5/10/15/20 rounds, etc.
 				// For now, I'll just update the score:
-				this.countRoundsComplete++;
-				this.updatePoints(this.pointsRoundComplete * round);
+				this.counts.roundComplete++;
+				this.updatePoints(this.points.roundComplete * round);
 				break;
 		}
 	}
@@ -333,27 +315,11 @@ export class Score {
 
 	// TODO: Increment the all-time counters by the in-game counter counts.
 	updateSavedScore() {
-		this.savedScore.countJunkPile += this.countJunkPile;
-		this.savedScore.countTwoWayJunkPile += this.countTwoWayJunkPile;
-		this.savedScore.countTwoWayCollision += this.countTwoWayCollision;
-		this.savedScore.countThreeWayJunkPile += this.countThreeWayJunkPile;
-		this.savedScore.countThreeWayCollision += this.countThreeWayCollision;
-		this.savedScore.countJunkPileCombox2 += this.countJunkPileCombox2;
-		this.savedScore.countJunkPileCombox3 += this.countJunkPileCombox3;
-		this.savedScore.countTwoWayJunkPileCombox2 += this.countTwoWayJunkPileCombox2;
-		this.savedScore.countTwoWayJunkPileCombox3 += this.countTwoWayJunkPileCombox3;
-		this.savedScore.countTwoWayCollisionCombox2 += this.countTwoWayCollisionCombox2;
-		this.savedScore.countTwoWayCollisionCombox3 += this.countTwoWayCollisionCombox3;
-		this.savedScore.countThreeWayJunkPileCombox2 += this.countThreeWayJunkPileCombox2;
-		this.savedScore.countThreeWayJunkPileCombox3 += this.countThreeWayJunkPileCombox3;
-		this.savedScore.countThreeWayCollisionCombox2 += this.countThreeWayCollisionCombox2;
-		this.savedScore.countThreeWayCollisionCombox3 += this.countThreeWayCollisionCombox3;
-		this.savedScore.countThreePlusTwoPlusOneCombo += this.countThreePlusTwoPlusOneCombo;
-		this.savedScore.countThreePlusTwoCombo += this.countThreePlusTwoCombo;
-		this.savedScore.countThreePlusOneCombo += this.countThreePlusOneCombo;
-		this.savedScore.countTwoPlusOneCombo += this.countTwoPlusOneCombo;
-		this.savedScore.countSonicScrewDriver += this.countSonicScrewDriver;
-		this.savedScore.countRoundsComplete += this.countRoundsComplete;
+		for (let evt in Events)
+			if (isNaN(Number(evt))) {
+				let command = ['this.savedScore.counts.', evt, ' += this.counts.', evt].join('');
+				eval(command);
+			}
 		// TODO: Update the 5/10/15, etc round counts!
 	}
 }
