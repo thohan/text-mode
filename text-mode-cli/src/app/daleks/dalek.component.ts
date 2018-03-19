@@ -16,6 +16,7 @@ import Score = ScoreModel.Score;
 import Events = ScoreModel.Events;
 import ConfigModel = require('./config.model');
 import { LocalStorageService } from '../shared/services/local-storage.service';
+import { GameState } from './game-state.model';
 
 @Component({
 	selector: 'app-daleks',
@@ -33,7 +34,7 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	score: Score;
 	@ViewChild('canvas') canvas: ElementRef;
 	squareSize = ConfigModel.squareSize;
-	isGameRunning = false;
+	gameState: GameState;
 
 	constructor(
 		private localStorageService: LocalStorageService
@@ -46,15 +47,21 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('window:keyup') keyStroke() {
-		if (this.isGameRunning) {
+		if (this.gameState === GameState.GameInProgress) {
 			this.updateGameBoard(Input.Keyboard);
 		}
 	}
 
 	onClick(event): void {
-		// TODO: Possibly replace isGameRunning with an enum that represents several different game states, i.e., running, start, options, hiscores, etc.
-		if (this.isGameRunning) {
-			this.updateGameBoard(Input.Mouse);
+		switch (this.gameState) {
+			case GameState.StartScreen:
+				if (this.startScreen.startButton.wasClicked(this.cursor.xpos, this.cursor.ypos)) {
+					this.startGame();
+				}
+				break;
+			case GameState.GameInProgress:
+				this.updateGameBoard(Input.Mouse);
+				break;
 		}
 	}
 
@@ -192,8 +199,10 @@ export class DalekComponent implements OnInit, AfterViewInit {
 	}
 
 	onCursorMove(event) {
-		if (this.isGameRunning) {
-			this.updateCursorPosition(event);
+		// I believe I want to always update the cursor position on mouse move regardless.
+		this.updateCursorPosition(event);
+
+		if (this.gameState === GameState.GameInProgress) {
 			this.drawArrow();
 		}
 	}
@@ -302,18 +311,16 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		setTimeout(() => {
 			this.startScreen.drawImages(this.ctx);
 		});
-
-		// start button click behavior!
 	}
 
 	startGame() {
+		this.gameState = GameState.GameInProgress;
+		const rect = this.getRect();
+		this.ctx.clearRect(0, 0, rect.width, rect.height);
 		//this.startNextRound();	// Commented out for testing. TODO: Un-comment!
 		this.startTestRound();		// My test arena. Bots will be pre-placed so as to test various scenarios.
 
-		// Timeout may not be needed since this isn't part of ngOnInit()
-		setTimeout(() => {
-			this.drawCharacters();
-		}, 200);
+		this.drawCharacters();
 	}
 
 	ngOnInit() {
@@ -321,7 +328,8 @@ export class DalekComponent implements OnInit, AfterViewInit {
 		this.cursor = new Cursor();
 		this.score = new Score();
 		this.startScreen = new StartScreen();
-		
+		this.gameState = GameState.StartScreen;
+
 		this.loadStartScreen();
 	};
 

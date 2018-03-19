@@ -7,9 +7,9 @@ export class StartScreen {
 	startButton: BasicImage;
 
 	constructor() {
-		// TODO: Put x/y vals in config?
-		this.titleMarquee = new BasicImage(<HTMLImageElement>document.getElementById('title-marquee'), Config.titleMarqueeXpos, Config.titleMarqueeYpos);
-		this.startButton = new BasicImage(<HTMLImageElement>document.getElementById('start-button'), 150, 200);
+		// TODO: Put x/y vals in config? Yes!!!
+		this.titleMarquee = new BasicImage(<HTMLImageElement>document.getElementById('title-marquee'), Config.titleMarqueeXpos, Config.titleMarqueeYpos, 400, 51);
+		this.startButton = new BasicImage(<HTMLImageElement>document.getElementById('start-button'), 150, 200, 200, 28);
 	}
 
 	drawImages(ctx: CanvasRenderingContext2D) {

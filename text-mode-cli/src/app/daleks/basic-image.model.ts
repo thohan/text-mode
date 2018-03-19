@@ -24,4 +24,16 @@
 			this.height = height;
 		}
 	}
+
+	wasClicked(cursorXpos: number, cursorYpos: number) {
+		if (cursorXpos >= this.xpos
+			&& cursorXpos <= this.xpos + this.width
+			&& cursorYpos >= this.ypos
+			&& cursorYpos <= this.ypos + this.width
+		) {
+			return true;
+		}
+
+		return false;
+	}
 }
